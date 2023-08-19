@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Registration</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <link rel="stylesheet" type="text/css" href="/edit.css" />
+    <script src="/node_modules/device-uuid/lib/device-uuid.js"></script>
+</head>
+<body>
+<form action="/register" method="post">
+    <div class="form__group field">
+        <input type="text" class="form__field" placeholder="Name" name="full_name" id="name" required/>
+        <label for="name" class="form__label">Full Name</label>
+    </div>
+    <div class="form__group field">
+        <input type="email" class="form__field" placeholder="Email" name="email" id="email" required/>
+        <label for="email" class="form__label">Email</label>
+    </div>
+    <div class="form__group field">
+        <select name="day" class="select" id="day">
+            <option id="month" class="first_option" value="day">Day</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+        </select>
+        <label>
+            <select name="month" class="select">
+                <option id="month" class="first_option" value="month">Month</option>
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
+            </select>
+        </label>
+        <select name="year" class="select" id="year">
+            <option value="year" class="first_option">Year</option>
+            <option title="2023" value="2023">2023</option>
+            <option title="2022" value="2022">2022</option>
+            <option title="2021" value="2021">2021</option>
+            <option title="2020" value="2020">2020</option>
+            <option title="2019" value="2019">2019</option>
+            <option title="2018" value="2018">2018</option>
+            <option title="2017" value="2017">2017</option>
+            <option title="2016" value="2016">2016</option>
+            <option title="2015" value="2015">2015</option>
+            <option title="2014" value="2014">2014</option>
+            <option title="2013" value="2013">2013</option>
+            <option title="2012" value="2012">2012</option>
+            <option title="2011" value="2011">2011</option>
+            <option title="2010" value="2010">2010</option>
+            <option title="2009" value="2009">2009</option>
+            <option title="2008" value="2008">2008</option>
+            <option title="2007" value="2007">2007</option>
+            <option title="2006" value="2006">2006</option>
+            <option title="2005" value="2005">2005</option>
+            <option title="2004" value="2004">2004</option>
+            <option title="2003" value="2003">2003</option>
+            <option title="2002" value="2002">2002</option>
+            <option title="2001" value="2001">2001</option>
+            <option title="2000" value="2000">2000</option>
+            <option title="1999" value="1999">1999</option>
+            <option title="1998" value="1998">1998</option>
+            <option title="1997" value="1997">1997</option>
+            <option title="1996" value="1996">1996</option>
+            <option title="1995" value="1995">1995</option>
+            <option title="1994" value="1994">1994</option>
+            <option title="1993" value="1993">1993</option>
+            <option title="1992" value="1992">1992</option>
+            <option title="1991" value="1991">1991</option>
+            <option title="1990" value="1990">1990</option>
+            <option title="1989" value="1989">1989</option>
+            <option title="1988" value="1988">1988</option>
+            <option title="1987" value="1987">1987</option>
+            <option title="1986" value="1986">1986</option>
+            <option title="1985" value="1985">1985</option>
+            <option title="1984" value="1984">1984</option>
+            <option title="1983" value="1983">1983</option>
+            <option title="1982" value="1982">1982</option>
+            <option title="1981" value="1981">1981</option>
+            <option title="1980" value="1980">1980</option>
+            <option title="1979" value="1979">1979</option>
+            <option title="1978" value="1978">1978</option>
+            <option title="1977" value="1977">1977</option>
+            <option title="1976" value="1976">1976</option>
+            <option title="1975" value="1975">1975</option>
+            <option title="1974" value="1974">1974</option>
+            <option title="1973" value="1973">1973</option>
+            <option title="1972" value="1972">1972</option>
+            <option title="1971" value="1971">1971</option>
+            <option title="1970" value="1970">1970</option>
+            <option title="1969" value="1969">1969</option>
+            <option title="1968" value="1968">1968</option>
+            <option title="1967" value="1967">1967</option>
+            <option title="1966" value="1966">1966</option>
+            <option title="1965" value="1965">1965</option>
+            <option title="1964" value="1964">1964</option>
+            <option title="1963" value="1963">1963</option>
+            <option title="1962" value="1962">1962</option>
+            <option title="1961" value="1961">1961</option>
+            <option title="1960" value="1960">1960</option>
+            <option title="1959" value="1959">1959</option>
+            <option title="1958" value="1958">1958</option>
+            <option title="1957" value="1957">1957</option>
+            <option title="1956" value="1956">1956</option>
+            <option title="1955" value="1955">1955</option>
+            <option title="1954" value="1954">1954</option>
+            <option title="1953" value="1953">1953</option>
+            <option title="1952" value="1952">1952</option>
+            <option title="1951" value="1951">1951</option>
+            <option title="1950" value="1950">1950</option>
+            <option title="1949" value="1949">1949</option>
+            <option title="1948" value="1948">1948</option>
+            <option title="1947" value="1947">1947</option>
+            <option title="1946" value="1946">1946</option>
+            <option title="1945" value="1945">1945</option>
+            <option title="1944" value="1944">1944</option>
+            <option title="1943" value="1943">1943</option>
+            <option title="1942" value="1942">1942</option>
+            <option title="1941" value="1941">1941</option>
+            <option title="1940" value="1940">1940</option>
+            <option title="1939" value="1939">1939</option>
+            <option title="1938" value="1938">1938</option>
+            <option title="1937" value="1937">1937</option>
+            <option title="1936" value="1936">1936</option>
+            <option title="1935" value="1935">1935</option>
+            <option title="1934" value="1934">1934</option>
+            <option title="1933" value="1933">1933</option>
+            <option title="1932" value="1932">1932</option>
+            <option title="1931" value="1931">1931</option>
+            <option title="1930" value="1930">1930</option>
+            <option title="1929" value="1929">1929</option>
+            <option title="1928" value="1928">1928</option>
+            <option title="1927" value="1927">1927</option>
+            <option title="1926" value="1926">1926</option>
+            <option title="1925" value="1925">1925</option>
+            <option title="1924" value="1924">1924</option>
+            <option title="1923" value="1923">1923</option>
+            <option title="1922" value="1922">1922</option>
+            <option title="1921" value="1921">1921</option>
+            <option title="1920" value="1920">1920</option>
+            <option title="1919" value="1919">1919</option>
+        </select>
+    </div>
+    <div class="form__group field">
+        <input type="text" class="form__field" placeholder="Username" name="username" id="username" required/>
+        <label for="username" class="form__label">Username</label>
+    </div>
+    <div class="form__group field" style="display: inline-flex;">
+        <input type="password" class="form__field" placeholder="Password" name="pass" id="pass" required/>
+        <label for="pass" class="form__label">Password</label>
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" id="eye" class="bi-eye-fill"
+             viewBox="0 0 16 16" style="display: none; color: white;" onclick="toggle()">
+            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" id="slash_eye"
+             style="color: white; display: inline-block;" fill="currentColor" class="bi bi-eye-slash-fill"
+             viewBox="0 0 16 16" onclick="toggle()">
+            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
+        </svg>
+    </div>
+    <div class="form__group field">
+        <input type="password" class="form__field" placeholder="Confirm Password" name="confirm_pass" id="confirm_pass"
+               required/>
+        <label for="confirm_pass" class="form__label">Confirm Password</label>
+    </div>
+    {{#if pass}}
+        <div class="alert alert-danger" role="alert">
+            Password's not matched.
+        </div>
+    {{/if}}
+
+
+    {{#if email}}
+        <div class="alert alert-danger" role="alert">
+            Email already exists.
+        </div>
+    {{/if}}
+
+
+    {{#if phone}}
+        <div class="alert alert-danger" role="alert">
+            Phone number already exists.
+        </div>
+    {{/if}}
+
+    {{#if notEmail}}
+        <div class="alert alert-danger" role="alert">
+            Not a valid email.
+        </div>
+    {{/if}}
+    <input type="hidden" name="deviceId" id="device_id">
+    <div class="form__group field">
+        <input type="submit" class="btn" value="Sign Up">
+    </div>
+    <h4 style="font-size: 17px; color: rgba(0,208,208,0.82); margin-top: 0; margin-bottom: 10px">Already have an account? <a
+            href="/login" style="text-decoration: none; color: #682c9f;">Sign in</a></h4>
+</form>
+
+<script type="application/javascript" >
+    let eye = document.getElementById('eye')
+    let slash_eye = document.getElementById('slash_eye')
+    let pwd = document.getElementById('pass')
+    let confirm_pwd = document.getElementById('confirm_pass')
+
+    const toggle = () => {
+        if (eye.style.display === 'none') {
+            slash_eye.style.display = 'none';
+            eye.style.display = 'inline-block';
+        } else {
+            eye.style.display = 'none';
+            slash_eye.style.display = 'inline-block';
+        }
+
+        if (pwd.type === 'password' && confirm_pwd.type === 'password') {
+            pwd.type = 'text'
+            confirm_pwd.type = 'text'
+        } else {
+            pwd.type = 'password'
+            confirm_pwd.type = 'password'
+        }
+    }
+
+    document.addEventListener('contextmenu', event => event.preventDefault())
+</script>
+</body>
+</html>

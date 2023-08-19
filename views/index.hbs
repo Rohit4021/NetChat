@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+        Home
+    </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{>style}}
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+</head>
+<body>
+<div id="container" style="bottom: 0;">
+    <form>
+        <a href="/login"><input type="button" value="SIGNIN"></a>
+        <a href="/signup"><input type="button" value="SIGNUP"></a>
+        <a href="/secret"><input type="button" value="CHATS"></a>
+        <a href="/profile"><input type="button" value="PROFILE"></a>
+        {{#if logout}}
+            <a href="/logout"><input type="button" value="LOGOUT"></a>
+        {{/if}}
+    </form>
+</div>
+<script type="application/javascript">
+    document.addEventListener('contextmenu', event => event.preventDefault())
+    document.onselectstart = () => {
+        event.preventDefault()
+    }
+</script>
+</body>
+</html>

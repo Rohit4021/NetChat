@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" type="text/css" href="/style_profile.css">
+    <script src="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <script src="../node_modules/device-uuid/lib/device-uuid.js"></script>
+    <link rel="stylesheet" href="/node_modules/cropperjs/dist/cropper.min.css">
+    <style>
+
+        #imageCropper {
+            background-color: #000;
+            flex-direction: column;
+        }
+
+        #cropImage {
+            width: 30%;
+        }
+
+        .crop {
+            background: none;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            margin: 5px 5px 30px;
+        }
+
+        #cropOptions {
+            width: 95%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @media screen and (min-width: 700px) {
+            #cropOptions {
+                width: 25%;
+            }
+        }
+
+        @media screen and (max-width: 700px) {
+            #cropImage {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="confirm">
+    <div class="underconfirm">
+        <h4 class="h4_confirm">Are you sure?</h4><br>
+        <button id="yes" class="confirm_btn" onclick="removeFriend()">Yes</button>
+        <button id="no" class="confirm_btn"
+                onclick="document.getElementsByClassName('confirm')[0].style.display = 'none'">No
+        </button>
+    </div>
+</div>
+<div class="confirm" id="imageCropper" style="display: none;">
+    <div id="cropOptions">
+        <img src="/cancel.png" class="crop" onclick="document.getElementById('form').reset(); document.getElementById('imageCropper').style.display = 'none'">
+        <img src="/tick.png" class="crop" id="crop" style="width: 35px">
+    </div>
+    <div>
+        <img src="/removeFriend.png" width="100%" id="cropImage">
+    </div>
+</div>
+<div class="container">
+    <div class="profile">
+        <div class="top-icons">
+            <div>
+                <i class="fas fa-ellipsis-v" style="display:none;"></i>
+            </div>
+            <div class="rm-f" onclick="document.getElementsByClassName('confirm')[0].style.display = 'flex'">
+                <i class="bi bi-person-dash" style="font-size: 25px; color: red; display:block;"></i>
+            </div>
+            <div class="rm-f" id="logout"
+                 onclick="let uuid = new DeviceUUID().get(); window.location.href = `/logout?devId=${uuid}`"
+                 style="display: none">
+                <i class="bi bi-box-arrow-right logout" style="font-size: 20px; color: red; display: none;"></i>
+            </div>
+        </div>
+        <div class="profile_data">
+
+        </div>
+        <div class="head_div">
+            <h3 id="friends_count">Friends (0)</h3>
+            <a href="/friends" class="see_all">See all</a>
+        </div>
+        <div class="friends">
+            <!--            <div class="friend">-->
+            <!--                <img src="/default_profile.png" class="friend-img">-->
+            <!--                <h4>Jatin Negi</h4>-->
+            <!--            </div>-->
+
+        </div>
+    </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/node_modules/cropperjs/dist/cropper.min.js"></script>
+<script>
+    let socket = io.connect()
+
+    function removeFriend() {
+        const url = window.location.href + ""
+        const splitUrl = url.split('/')
+        socket.emit('rm_f', splitUrl[4])
+
+        document.getElementsByClassName('confirm')[0].style.display = 'none'
+
+        setTimeout(() => {
+            window.location.reload()
+        }, 1000)
+    }
+
+    function add(btn) {
+        if (btn.innerText === 'Add Friend') {
+            socket.emit('addFriend', btn.id)
+            btn.innerText = 'Requested'
+        } else if (btn.innerText === 'Requested') {
+            socket.emit('cancelRequest', btn.id)
+            btn.innerText = 'Add Friend'
+        }
+    }
+
+    socket.on('loadProfile', namePic => {
+        const profile = document.getElementsByClassName('profile_data')
+        const img = document.createElement('img')
+        img.setAttribute('src', namePic.myPic)
+        img.classList.add('user-img')
+        const imgDiv = document.createElement('div')
+        imgDiv.classList.add('imgDiv')
+        const h2 = document.createElement('h2')
+        h2.innerText = namePic.name
+        {{#if owner}}
+            const edit = document.createElement('a')
+            edit.setAttribute('href', `/users/edit/${namePic.username}`)
+            edit.classList.add('btn')
+            edit.innerText = 'Edit Profile'
+            const div = document.getElementsByClassName('bi')[0]
+            div.style.display = 'none'
+            const logout = document.getElementsByClassName('logout')[0]
+            logout.style.display = 'block'
+            document.getElementById('logout').style.display = 'block'
+            document.getElementsByClassName('see_all')[0].style.display = 'block'
+        {{/if}}
+        {{#if notOwner}}
+            const friendButton = document.createElement('a')
+            if (namePic.ifFriend.friend === true) {
+                friendButton.innerHTML = 'Added'
+                friendButton.classList.add('border-btn')
+                friendButton.style.zIndex = '0'
+                const div = document.getElementsByClassName('bi')[0]
+                div.style.display = 'block'
+            } else if (namePic.ifFriend.friend === 'requested') {
+                friendButton.innerText = 'Requested'
+                friendButton.classList.add('border-btn')
+                friendButton.style.zIndex = '0'
+                const div = document.getElementsByClassName('bi')[0]
+                div.style.display = 'none'
+            } else {
+                friendButton.innerText = 'Add Friend'
+                friendButton.classList.add('btn')
+                const div = document.getElementsByClassName('bi')[0]
+                div.style.display = 'none'
+            }
+
+            friendButton.setAttribute('id', `${namePic.username}`)
+            friendButton.setAttribute('onclick', 'add(this)')
+            friendButton.style.cursor = 'pointer'
+        {{/if}}
+        const image = document.createElement('img')
+        const input = document.createElement('input')
+        const form = document.createElement('form')
+        const label = document.createElement('label')
+        const hiddenEl = document.createElement('input')
+        label.setAttribute('for', 'input_file')
+        form.setAttribute('action', '/edit')
+        form.setAttribute('method', 'post')
+        form.setAttribute('id', 'form')
+        form.setAttribute('enctype', 'multipart/form-data')
+        hiddenEl.setAttribute('type', 'hidden')
+        hiddenEl.setAttribute('name', 'image')
+        hiddenEl.setAttribute('id', 'hidEl')
+        input.setAttribute('type', 'file')
+        input.setAttribute('name', 'file')
+        input.setAttribute('id', 'input_file')
+        input.setAttribute('onchange', 'changeProfilePic(this)')
+        image.setAttribute('src', "/camera.png")
+        input.style.display = 'none'
+        image.classList.add('camera_img')
+        label.classList.add('camera_button')
+        imgDiv.appendChild(img)
+        label.appendChild(image)
+        form.appendChild(input)
+        form.appendChild(hiddenEl)
+        profile[0].appendChild(form)
+        profile[0].appendChild(img)
+        profile[0].appendChild(label)
+        profile[0].appendChild(h2)
+        {{#if notOwner}}
+            profile[0].appendChild(friendButton)
+        {{/if}}
+        {{#if owner}}
+            profile[0].appendChild(edit)
+        {{/if}}
+    })
+
+
+    setTimeout(() => {
+        const button = document.getElementsByClassName('camera_button')
+        button[0].addEventListener('change', () => {
+            window.location.reload()
+        })
+    }, 3000)
+
+
+    socket.on('friends', list => {
+        for (let i = 0; i < list.friendsList.length; i++) {
+            if (list.length !== 0) {
+                const friendsCount = document.getElementById('friends_count')
+                friendsCount.innerText = `Friends (${list.friendsList.length})`
+                const parentDiv = document.getElementsByClassName('friends')
+                const div = document.createElement('div')
+                div.classList.add('friend_block')
+                const img = document.createElement('img')
+                img.setAttribute('src', list.friendsPic[i])
+                img.classList.add('friend-img')
+                img.setAttribute('onclick', 'this.childNodes[0].click()')
+                const h4 = document.createElement('h4')
+                h4.innerText = list.friendsList[i]
+                h4.style.overflow = 'hidden'
+                h4.setAttribute('title', list.friendsList[i])
+                h4.setAttribute('onclick', 'this.parentElement.childNodes[0].click()')
+                const a = document.createElement('a')
+                a.href = `${window.location.protocol}//${window.location.host}/profile/${list.friendsList[i]}`
+                a.style.display = 'none'
+                a.setAttribute('id', 'newA')
+                const div1 = document.createElement('div')
+                div1.classList.add('friend')
+                div1.setAttribute('onclick', 'this.parentElement.childNodes[0].click()')
+                div1.appendChild(a)
+                div1.appendChild(img)
+                div1.appendChild(h4)
+                div.appendChild(div1)
+                parentDiv[0].appendChild(div)
+            }
+        }
+    })
+
+
+    const changeProfilePic = (pic) => {
+        const form = document.getElementById('form')
+
+        const file = pic.files[0]
+
+        console.log(file)
+
+        let url
+
+        const reader = new FileReader()
+        reader.addEventListener("load", () => {
+            url = reader.result
+
+            const image = document.getElementById('cropImage')
+            image.src = url
+
+            const cropperDiv = document.getElementById('imageCropper')
+            cropperDiv.style.display = 'flex'
+
+            const cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+                background: false,
+                dragMode: 'move',
+                autoCropArea: 1,
+                cropBoxMovable: false,
+                cropBoxResizable: false,
+                zoomable: true,
+                scalable: false
+            })
+
+
+
+            document.getElementById('crop').addEventListener('click', () => {
+                const croppedImage = cropper.getCroppedCanvas().toDataURL("image/png")
+                const hid = document.getElementById('hidEl')
+                hid.value = croppedImage
+                form.submit()
+                cropperDiv.style.display = 'none'
+            })
+        })
+        reader.readAsDataURL(file)
+    }
+
+    document.onselectstart = () => {
+        event.preventDefault()
+    }
+
+</script>
+</body>
+</html>

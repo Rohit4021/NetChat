@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Authorized</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{>style}}
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+</head>
+<body>
+<div id="container" style="text-align: center;">
+    <div id="textColor">
+        <h1 style="display:block;">Authorization Successful!</h1><br>
+        <h2 style="font-weight: normal">Go to login:- </h2>
+        <a href="/login"><input type="submit" value="Login"></a>
+    </div>
+</div>
+<script>
+    document.onselectstart = () => {
+        event.preventDefault()
+    }
+</script>
+</body>
+</html>

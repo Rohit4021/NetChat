@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial scale=1">
+    <title>Wassup chat app</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="../node_modules/device-uuid/lib/device-uuid.js"></script>
+</head>
+<body onload="const messageAreaa = document.querySelector('.message__area'); messageAreaa.scrollTop = messageAreaa.scrollHeight;">
+<div class="confirm">
+    <div class="underconfirm">
+        <h4 class="h4_confirm">Are you sure?</h4><br>
+        <button id="yes" class="confirm_btn" onclick="deleteChat()">Yes</button>
+        <button id="no" class="confirm_btn" onclick="document.getElementsByClassName('confirm')[0].style.display = 'none'">No</button>
+    </div>
+</div>
+<section class="chat__section">
+    <div class="brand">
+        <img height="40" id="proPicImg" style="border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent;" onclick="redirection()">
+        <h1 id="h1Pro" onclick="redirection()" style="cursor: pointer; -webkit-tap-highlight-color: transparent;">Wassup</h1>
+        <i class="bi bi-trash3" title="Delete Chat" style="color: red; margin-left: auto; font-size: 20px" id="popup" onclick="document.getElementsByClassName('confirm')[0].style.display = 'flex'"></i>
+    </div>
+    <div class="message__area"></div>
+    <ul class="menu off">
+        <li class="item" style="margin-bottom: 5px; color: red;" onclick="dfa()"><i class="bi bi-trash3" title="Delete Chat" style="color: red; font-size: 20px; margin-right: 5px"></i>Unsend</li>
+        <li class="item" onclick="copy()"><i class="bi bi-clipboard" title="Delete Chat" style="font-size: 20px; margin-right: 5px"></i>Copy</li>
+    </ul>
+    <div id="textarea_div">
+        <button class="hold_btn" id="info" onclick="copy()"><i class="bi bi-clipboard" title="Delete Chat" style="font-size: 16px; margin-right: 5px"></i>Copy</button>
+        <button class="hold_btn" style="color: red" id="delete" onclick="dfa()"><i class="bi bi-trash3" title="Delete Chat" style="color: red; font-size: 16px; margin-right: 5px"></i>Unsend</button>
+        <i class="bi bi-camera-fill" onclick="openCamera()"></i>
+        <textarea id="textarea" cols="30" rows="1" placeholder="Write a message..." spellcheck="false" oninput="this.scrollTop = this.scrollHeight; if (this.value !== '') { document.getElementById('imgLogo').style.display = 'none'; document.getElementById('send').style.display = 'inline-block'; } else { document.getElementById('imgLogo').style.display = 'inline-block'; document.getElementById('send').style.display = 'none'; }"></textarea>
+        <i class="bi bi-send" id="send" onclick="const textarea = document.getElementById('textarea'); sendMessage(textarea.value); textarea.value = ''; this.style.display = 'none'; document.getElementById('imgLogo').style.display = 'inline-block';"></i>
+        <input type="file" onchange="change(this)" id="imageUpload">
+        <label for="imageUpload"><i class="bi bi-image" id="imgLogo"></i></label>
+    </div>
+</section>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/client.js"></script>
+<script src="/index.js"></script>
+<script>
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(`http://localhost:8000/sw.js`)
+    }
+
+    document.onselectstart = () => {
+        event.preventDefault()
+    }
+
+    Notification.requestPermission().then(perm => {
+        if (perm === "granted") {
+
+        }
+    })
+
+    if ('serviceWorker' in navigator) {
+        document.getElementsByClassName('bi-camera-fill')[0].style.display = 'none'
+        document.getElementById('textarea').style.paddingLeft = '25px'
+    } else {
+        document.getElementsByClassName('bi-camera-fill')[0].style.display = 'inline-block'
+    }
+
+</script>
+</body>
+</html>
