@@ -639,6 +639,7 @@ app.post('/login', async (req, res) => {
                     res.render('login', {
                         invalid_credentials: true
                     })
+                    console.log('Wrong Password.')
                 }
             })
         }
@@ -646,6 +647,7 @@ app.post('/login', async (req, res) => {
         res.render('login', {
             invalid_credentials: true
         })
+        console.log('Wrong Username')
     }
 
 })
