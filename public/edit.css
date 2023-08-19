@@ -1,0 +1,147 @@
+form {
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    font-size: 1.5rem;
+    background-color: #222222;
+    text-align: center;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.form__group {
+    position: relative;
+    padding: 10px 0 0;
+    margin-top: 10px;
+    width: 20%;
+}
+
+svg {
+    margin-top: 8px;
+    margin-left: -35px;
+    cursor: pointer;
+}
+
+.form__field {
+    font-family: inherit;
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid #9b9b9b;
+    outline: 0;
+    font-size: 1.3rem;
+    color: #fff;
+    padding: 7px 0;
+    margin-bottom: 10px;
+    background: transparent;
+    transition: border-color 0.2s;
+}
+
+.btn {
+    text-decoration: none;
+    color: white;
+    padding: 10px 40px;
+    border-radius: 30px;
+    background: linear-gradient(to right, #8d68c5, #e34494);
+    display: inline-block;
+    margin: 20px 0;
+    font-size: 20px;
+    border: none;
+    width: 160px;
+    height: 45px;
+    cursor: pointer;
+    outline: none;
+}
+
+.form__field::placeholder {
+    color: transparent;
+}
+
+.form__field:placeholder-shown ~ .form__label {
+    font-size: 1.3rem;
+    cursor: text;
+    top: 20px;
+}
+
+.form__label {
+    position: absolute;
+    font-family: inherit;
+    top: -5px;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: #9b9b9b;
+}
+
+.form__field:focus {
+    padding-bottom: 6px;
+    font-weight: 400;
+    border-width: 3px;
+    border-image: linear-gradient(to right, #11998e, #38ef7d);
+    border-image-slice: 1;
+}
+.form__field:focus ~ .form__label {
+    position: absolute;
+    top: -5px;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: #11998e;
+}
+
+/* reset input */
+.form__field:required, .form__field:invalid {
+    box-shadow: none;
+}
+
+/* demo */
+
+.select {
+    height: 40px;
+    padding: 8px;
+    outline: none;
+    font-size: 17px;
+    font-weight: 400;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: #222222;
+    color: #11998e;
+    border-image: linear-gradient(to right, #11998e, #38ef7d);
+    border-image-slice: 1;
+    margin-bottom: 15px;
+    -webkit-appearance: button;
+    -moz-appearance: none;
+}
+
+.alert {
+    margin-bottom: -10px;
+    margin-top: 10px;
+}
+
+.first_option {
+    display: none;
+}
+
+.alert {
+    font-size: 1rem;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+    .form__group {
+        width: 90%;
+    }
+
+    .select {
+        margin-left: 10px;
+    }
+}

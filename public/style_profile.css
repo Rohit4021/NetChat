@@ -1,0 +1,292 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    background: #ededff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.border-btn {
+    --border-radius: 50px;
+    --border-width: 2px;
+    display: inline-flex;
+    border-radius: var(--border-radius);
+    padding: 10px 40px;
+    border: 1px solid #32384f;
+    background: linear-gradient(to right, #8d68c5, #e34494);
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    margin: 40px 0 40px auto;
+    font-size: 15px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.border-btn::before {
+    content: '';
+    display: block;
+    position: absolute;
+    height: calc(100% - calc(var(--border-width)) * 2);
+    width: calc(100% - calc(var(--border-width)) * 2);
+    background: #32384f;
+    top: var(--border-width);
+    left: var(--border-width);
+    border-radius: var(--border-radius);
+    z-index: -1;
+}
+
+.s::before {
+    position: absolute;
+}
+
+.btn {
+    text-decoration: none;
+    color: white;
+    padding: 10px 40px;
+    border-radius: 30px;
+    background: linear-gradient(to right, #8d68c5, #e34494);
+    display: inline-block;
+    margin: 40px 0;
+    font-size: 15px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.profile {
+    width: 90%;
+    max-width: 320px;
+    background: #32384f;
+    text-align: center;
+    padding: 30px 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    color: white;
+}
+
+.top-icons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.fa-heart {
+    margin-right: 10px;
+}
+
+.user-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.rm-f {
+    cursor: pointer;
+    width: 40px;
+    border-radius: 50%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+.imgDiv {
+    position: fixed;
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 50%;
+}
+
+.profile h2 {
+    font-weight: 500;
+    font-size: 22px;
+    margin-top: 20px;
+}
+
+.profile p {
+    font-size: 12px;
+}
+
+.head_div {
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.head_div h3 {
+    text-align: start;
+    margin-left: 20px;
+    font-weight: 150;
+}
+
+.see_all {
+    display: none;
+    text-align: right;
+    font-weight: 150;
+    text-decoration: none;
+    color: #a19f9f;
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+
+.friend {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.friend_block {
+    display: block;
+    cursor: pointer;
+    border-radius: 50px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/*.friend_block:hover {*/
+/*    background: rgba(0, 0, 0, 0.1);*/
+/*}*/
+
+.friends {
+    margin-top: 5px;
+    width: 100%;
+    max-height: 175px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.friends::-webkit-scrollbar {
+    width: 2px;
+}
+
+.friends::-webkit-scrollbar-thumb {
+    background: grey;
+}
+
+.friends:hover::-webkit-scrollbar {
+    width: 5px;
+}
+
+.friends h4 {
+    font-weight: 200;
+    margin-left: 20px;
+    font-size: 18px;
+}
+
+.friend-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-left: 15px;
+}
+
+.camera_img {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 1px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.camera_button {
+    -webkit-tap-highlight-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    margin-left: -30px;
+    height: 27px;
+    width: 27px;
+    border-radius: 50px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.friend-btn {
+    width: 75%;
+    padding: 10px 30%;
+}
+
+.confirm {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    display: none;
+    z-index: 1;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.8);
+}
+
+.underconfirm {
+    background: #cecdcd;
+    width: 270px;
+    padding: 20px 10px;
+    border-radius: 20px;
+}
+
+.h4_confirm {
+    font-size: 22px;
+    margin: 0;
+}
+
+#yes {
+    margin-right: 10px;
+}
+
+.confirm_btn {
+    width: 30%;
+    height: 30px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.confirm_btn:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+@media screen and (min-width: 700px) {
+    .rm-f:hover {
+        background: #454964;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .profile {
+        width: 100%;
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .friend-btn {
+        width: 80%;
+        padding: 10px 35%;
+    }
+
+    .rm-f:active {
+        background: #454964;
+    }
+
+    .friends {
+        height: 40%;
+        max-height: 40%;
+    }
+
+    .friends:hover::-webkit-scrollbar {
+        width: 2px;
+    }
+}
