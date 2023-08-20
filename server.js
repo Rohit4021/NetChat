@@ -23,6 +23,7 @@ const push = require('web-push')
 const {uploadImage} = require('./uploadImage')
 const OneSignal = require('onesignal-node')
 const https = require('https')
+const { exec } = require('child_process')
 require('dotenv').config()
 
 const PORT = process.env.PORT || 8000
@@ -39,6 +40,7 @@ app.use(express.urlencoded({
 
 http.listen(PORT, () => {
     console.log(`Listening at port : ${PORT}`)
+    // exec('mkdir temp')
 })
 
 const partial_path = path.join(__dirname + '/views/partials/')
@@ -997,13 +999,7 @@ app.get('/chats/:chat', async (req, res) => {
             socket.emit('proPic', {pic, nameProPic, usernamePro})
             socket.emit('conn')
         }).catch((err) => {
-            console.log(splitParam)
-            try {
-                res.reload()
-            } catch (e) {
-                console.log(req.url)
-                // res.redirect(req.url)
-            }
+            res.reload()
         })
 
         socket.once('join', () => {
@@ -1056,8 +1052,10 @@ app.get('/chats/:chat', async (req, res) => {
                 if (msg.filename === 'image.name&base64') {
                     let uuid = short.uuid()
                     dbMsg = await uploadImage(`${uuid}.png}`, msg.message, 'base64')
+                    // dbMsg = dbMsg = `Yup, That's the error`
                     console.log('base64')
                 } else {
+                    // dbMsg = dbMsg = `Yup, That's the error`
                     dbMsg = await uploadImage(msg.filename, msg.message, 'image')
                     console.log('image')
                 }
