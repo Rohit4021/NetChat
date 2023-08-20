@@ -44,7 +44,7 @@
 <script>
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register(`http://localhost:8000/sw.js`)
+        navigator.serviceWorker.register(`${window.location.protocol}//${window.location.host}/sw.js`)
     }
 
     document.onselectstart = () => {
