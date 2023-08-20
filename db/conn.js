@@ -4,12 +4,12 @@ const res = require("express/lib/response");
 mongoose.set('strictQuery', false)
 require('dotenv').config()
 
-mongoose.connect(`mongodb+srv://${process.env.USER}:${process.env.PASS}@chatapp.t4fgyxk.mongodb.net/?retryWrites=true&w=majority`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-// mongoose.connect(`mongodb://0.0.0.0/netchat`, {
+// mongoose.connect(`mongodb+srv://${process.env.USER}:${process.env.PASS}@chatapp.t4fgyxk.mongodb.net/?retryWrites=true&w=majority`, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true
+mongoose.connect(`mongodb://0.0.0.0/netchat`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 }).then(() => {
     console.log('Connection Successful')
 }).catch((e) => {
@@ -36,7 +36,8 @@ const users = new mongoose.Schema({
             endpoint: String,
             p256dh: String,
             auth: String,
-            deviceId: String
+            deviceId: String,
+            serverKey: String
         }
     ],
     friends: [
