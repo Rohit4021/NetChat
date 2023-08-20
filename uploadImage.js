@@ -1,7 +1,6 @@
 const fs = require("fs");
-const short = require('short-uuid')
 const imgbbUploader = require('imgbb-uploader')
-
+const path = require("path");
 
 exports.uploadImage = async (filename, imageData, imgType) => {
     if (imgType === 'base64') {
@@ -12,11 +11,13 @@ exports.uploadImage = async (filename, imageData, imgType) => {
         }).then((response) => {
             console.log('base64')
             console.log(response.url)
-            console.log(imageData)
             return response.url.toString().trim()
         })
     } else if (imgType === 'image') {
-        await fs.writeFileSync(`./temp/${filename}`, imageData)
+        if (!fs.existsSync('./temp')) {
+            fs.mkdirSync(path.join(__dirname, 'temp'))
+        }
+        fs.writeFileSync(`./temp/${filename}`, imageData)
 
         return await imgbbUploader(process.env.IMGBB_API_KEY, `./temp/${filename}`).then(async (response) => {
 
