@@ -12,6 +12,7 @@ exports.uploadImage = async (filename, imageData, imgType) => {
         }).then((response) => {
             console.log('base64')
             console.log(response.url)
+            console.log(imageData)
             return response.url.toString().trim()
         })
     } else if (imgType === 'image') {
@@ -22,7 +23,7 @@ exports.uploadImage = async (filename, imageData, imgType) => {
             console.log('image')
             console.log(response.url)
 
-            fs.rmSync(`./temp/${filename}`)
+            // fs.rmSync(`./temp/${filename}`)
 
             return response.url.toString().trim()
         })
