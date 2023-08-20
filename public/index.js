@@ -1,6 +1,7 @@
 if ('serviceWorker' in navigator) {
     addEventListener('load', async () => {
-        await navigator.serviceWorker.register(`http://localhost:8000/sw.js`)
+        console.log(`${window.location.protocol}//${window.location.host}/sw.js`)
+        await navigator.serviceWorker.register(`${window.location.protocol}//${window.location.host}/sw.js`)
         const reg = await navigator.serviceWorker.ready
         let uuid = new DeviceUUID().get()
         const urlSplit = document.referrer.split('/')
