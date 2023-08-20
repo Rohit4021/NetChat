@@ -23,7 +23,6 @@ const push = require('web-push')
 const {uploadImage} = require('./uploadImage')
 const OneSignal = require('onesignal-node')
 const https = require('https')
-const { exec } = require('child_process')
 require('dotenv').config()
 
 const PORT = process.env.PORT || 8000
@@ -40,7 +39,6 @@ app.use(express.urlencoded({
 
 http.listen(PORT, () => {
     console.log(`Listening at port : ${PORT}`)
-    // exec('mkdir temp')
 })
 
 const partial_path = path.join(__dirname + '/views/partials/')
@@ -188,6 +186,25 @@ app.get('/findData', async (req, res) => {
     }
 })
 
+app.post('/subchange', async (req, res) => {
+    const endpoint = req.body.endpoint
+    const p256dh = req.body.p256dh
+    const auth = req.body.auth
+    const serverKey = req.body.serverKey
+
+    await Users.findOneAndUpdate({
+        username: req.cookies.user
+    }, {
+        $set: {
+            "subscription.$[el].auth": auth
+        }
+    }, {
+        arrayFilters: [{
+            "el.serverKey": serverKey
+        }]
+    })
+})
+
 app.get('/', auth, async (req, res) => {
 
     io.once('connection', async socket => {
@@ -196,6 +213,8 @@ app.get('/', auth, async (req, res) => {
             await Users.findOne({
                 username: req.cookies.user
             }).then(r => socket.emit('requests', r.requests))
+
+            let serverKey
 
             socket.on('getKey', async key => {
 
@@ -209,6 +228,8 @@ app.get('/', auth, async (req, res) => {
                     }
                 })
 
+                serverKey = keyItem[0].vapidKeys[0].publicKey
+
 
                 const subs = await Users.find({
                     username: req.cookies.user
@@ -220,9 +241,11 @@ app.get('/', auth, async (req, res) => {
                     }
                 })
 
-                if (subs[0].subscription.length === 0) {
+                console.log('subs')
+
+                // if (subs[0].subscription.length === 0) {
                     socket.emit('sendKey', keyItem[0].vapidKeys[0].publicKey)
-                }
+                // }
             })
 
 
@@ -235,6 +258,7 @@ app.get('/', auth, async (req, res) => {
                             endpoint: push.push.endpoint,
                             p256dh: push.push.keys.p256dh,
                             auth: push.push.keys.auth,
+                            serverKey: serverKey,
                             deviceId: push.deviceId
                         }
                     }
@@ -1046,22 +1070,19 @@ app.get('/chats/:chat', async (req, res) => {
                 username: msg.user
             })
 
+            console.log('hi')
+
             let dbMsg
 
             if (msg.type === 'image') {
                 if (msg.filename === 'image.name&base64') {
                     let uuid = short.uuid()
                     dbMsg = await uploadImage(`${uuid}.png}`, msg.message, 'base64')
-                    // dbMsg = dbMsg = `Yup, That's the error`
-                    console.log('base64')
                 } else {
-                    // dbMsg = dbMsg = `Yup, That's the error`
                     dbMsg = await uploadImage(msg.filename, msg.message, 'image')
-                    console.log('image')
                 }
             } else if (msg.type === 'text') {
                 dbMsg = msg.message
-                console.log('text')
             }
 
             delete msg.message
@@ -1104,6 +1125,8 @@ app.get('/chats/:chat', async (req, res) => {
 
                 const send = await client.createNotification(notification)
                 console.log(send.body)
+
+                // sendNotification(notification)
 
             } catch (e) {
                 if (e instanceof OneSignal.HTTPError) {
