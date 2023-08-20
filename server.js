@@ -639,7 +639,6 @@ app.post('/login', async (req, res) => {
                     res.render('login', {
                         invalid_credentials: true
                     })
-                    console.log('Wrong Password.')
                 }
             })
         }
@@ -647,7 +646,6 @@ app.post('/login', async (req, res) => {
         res.render('login', {
             invalid_credentials: true
         })
-        console.log('Wrong Username')
     }
 
 })
@@ -1051,12 +1049,23 @@ app.get('/chats/:chat', async (req, res) => {
             if (msg.type === 'image') {
                 if (msg.filename === 'image.name&base64') {
                     let uuid = short.uuid()
-                    dbMsg = await uploadImage(`${uuid}.png}`, msg.message, 'base64')
+                    try {
+                        dbMsg = await uploadImage(`${uuid}.png}`, msg.message, 'base64')
+                    } catch (e) {
+                        dbMsg = `Yup, That's the error`
+                    }
+                    console.log('base64')
                 } else {
-                    dbMsg = await uploadImage(msg.filename, msg.message, 'image')
+                    try {
+                        dbMsg = await uploadImage(msg.filename, msg.message, 'image')
+                    } catch (e) {
+                        dbMsg = `Yup, That's the error`
+                    }
+                    console.log('image')
                 }
             } else if (msg.type === 'text') {
                 dbMsg = msg.message
+                console.log('text')
             }
 
             delete msg.message
@@ -1099,8 +1108,6 @@ app.get('/chats/:chat', async (req, res) => {
 
                 const send = await client.createNotification(notification)
                 console.log(send.body)
-
-                // sendNotification(notification)
 
             } catch (e) {
                 if (e instanceof OneSignal.HTTPError) {
