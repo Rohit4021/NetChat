@@ -997,7 +997,13 @@ app.get('/chats/:chat', async (req, res) => {
             socket.emit('proPic', {pic, nameProPic, usernamePro})
             socket.emit('conn')
         }).catch((err) => {
-            res.reload()
+            console.log(splitParam)
+            try {
+                res.reload()
+            } catch (e) {
+                console.log(req.url)
+                res.redirect(req.url)
+            }
         })
 
         socket.once('join', () => {
