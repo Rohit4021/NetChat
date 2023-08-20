@@ -16,16 +16,16 @@ exports.uploadImage = async (filename, imageData, imgType) => {
             return response.url.toString().trim()
         })
     } else if (imgType === 'image') {
-        return fs.writeFile(`./temp/${filename}`, imageData, async () => {
-            return await imgbbUploader(process.env.IMGBB_API_KEY, `./temp/${filename}`).then(async (response) => {
+        await fs.writeFileSync(`./temp/${filename}`, imageData)
 
-                console.log('image')
-                console.log(response.url)
+        return await imgbbUploader(process.env.IMGBB_API_KEY, `./temp/${filename}`).then(async (response) => {
 
-                fs.rmSync(`./temp/${filename}`)
+            console.log('image')
+            console.log(response.url)
 
-                return response.url.toString().trim()
-            })
+            // fs.rmSync(`./temp/${filename}`)
+
+            return response.url.toString().trim()
         })
     }
 }
