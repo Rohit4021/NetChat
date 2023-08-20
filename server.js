@@ -929,9 +929,6 @@ app.get('/users', getUserEmail, (req, res) => {
 
 app.get('/chats/:chat', async (req, res) => {
 
-    console.log(req.params.chat)
-    console.log(req.param('chat'))
-
     if (!req.cookies.user) {
         res.redirect('/login')
     }
@@ -1005,7 +1002,7 @@ app.get('/chats/:chat', async (req, res) => {
                 res.reload()
             } catch (e) {
                 console.log(req.url)
-                res.redirect(req.url)
+                // res.redirect(req.url)
             }
         })
 
