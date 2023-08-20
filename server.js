@@ -1055,18 +1055,10 @@ app.get('/chats/:chat', async (req, res) => {
             if (msg.type === 'image') {
                 if (msg.filename === 'image.name&base64') {
                     let uuid = short.uuid()
-                    try {
-                        dbMsg = await uploadImage(`${uuid}.png}`, msg.message, 'base64')
-                    } catch (e) {
-                        dbMsg = `Yup, That's the error`
-                    }
+                    dbMsg = await uploadImage(`${uuid}.png}`, msg.message, 'base64')
                     console.log('base64')
                 } else {
-                    try {
-                        dbMsg = await uploadImage(msg.filename, msg.message, 'image')
-                    } catch (e) {
-                        dbMsg = `Yup, That's the error`
-                    }
+                    dbMsg = await uploadImage(msg.filename, msg.message, 'image')
                     console.log('image')
                 }
             } else if (msg.type === 'text') {
