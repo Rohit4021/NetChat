@@ -1,6 +1,5 @@
 if ('serviceWorker' in navigator) {
     addEventListener('load', async () => {
-        console.log(`${window.location.protocol}//${window.location.host}/sw.js`)
         await navigator.serviceWorker.register(`${window.location.protocol}//${window.location.host}/sw.js`)
         const reg = await navigator.serviceWorker.ready
         let uuid = new DeviceUUID().get()
@@ -11,7 +10,6 @@ if ('serviceWorker' in navigator) {
         }
 
         socket.on('sendKey', key => {
-
             reg.pushManager.getSubscription().then(async (subscription) => {
                 if (!subscription) {
                     let push = await reg.pushManager.subscribe({
