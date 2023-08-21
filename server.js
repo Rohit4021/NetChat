@@ -23,6 +23,7 @@ const push = require('web-push')
 const {uploadImage} = require('./uploadImage')
 const OneSignal = require('onesignal-node')
 const https = require('https')
+const cache = require('./cache')
 require('dotenv').config()
 
 const PORT = process.env.PORT || 8000
@@ -171,7 +172,7 @@ app.get('/logout', async (req, res) => {
     }
 })
 
-app.get('/findData', async (req, res) => {
+app.get('/findData', cache(300), async (req, res) => {
     const user = req.query.user
 
     if (user) {
@@ -205,7 +206,7 @@ app.post('/subchange', async (req, res) => {
     })
 })
 
-app.get('/', auth, async (req, res) => {
+app.get('/', cache(300) && auth, async (req, res) => {
 
     io.once('connection', async socket => {
 
@@ -310,11 +311,11 @@ app.get('/', auth, async (req, res) => {
 
 })
 
-app.get('/signup', (req, res) => {
+app.get('/signup', cache(300), (req, res) => {
     res.render('signup')
 })
 
-app.get('/profile', validate, async (req, res) => {
+app.get('/profile', cache(300) && validate, async (req, res) => {
 
     io.once('connection', async (socket) => {
         try {
@@ -351,7 +352,7 @@ app.get('/profile', validate, async (req, res) => {
 
 })
 
-app.get('/profile/:user', validate, async (req, res) => {
+app.get('/profile/:user', cache(300) && validate, async (req, res) => {
     const profileUser = req.params.user
 
     try {
@@ -447,7 +448,7 @@ app.get('/profile/:user', validate, async (req, res) => {
 
 })
 
-app.get('/friends', friends, async (req, res) => {
+app.get('/friends', cache(300) && friends, async (req, res) => {
     try {
         io.once('connection', async socket => {
             let fFind = []
@@ -601,7 +602,7 @@ app.post('/register', async (req, res) => {
 
 })
 
-app.get('/login', (req, res) => {
+app.get('/login', cache(300), (req, res) => {
     res.render('login')
 })
 
@@ -676,7 +677,7 @@ app.post('/login', async (req, res) => {
 
 })
 
-app.get('/user', async (req, res) => {
+app.get('/user', cache(300), async (req, res) => {
     const email = req.query.email
     const emailDB = await Users.find({email: email})
     if (emailDB.length !== 0) {
@@ -748,100 +749,100 @@ app.post('/updatedata', async (req, res) => {
     }
 })
 
-app.get('/client.js', (req, res) => {
+app.get('/client.js', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/client.js')
 })
 
-app.get('/friendsFilter.js', (req, res) => {
+app.get('/friendsFilter.js', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/friendsFilter.js')
 })
 
-app.get('/style.css', (req, res) => {
+app.get('/style.css', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/style.css')
 })
 
-app.get('/edit.css', (req, res) => {
+app.get('/edit.css', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/edit.css')
 })
 
-app.get('/style_profile.css', (req, res) => {
+app.get('/style_profile.css', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/style_profile.css')
 })
 
-app.get('/favicon.png', (req, res) => {
+app.get('/favicon.png', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/favicon.png')
 })
 
-app.get('/req.js', (req, res) => {
+app.get('/req.js', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/req.js')
 })
 
-app.get('/index.js', (req, res) => {
+app.get('/index.js', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/index.js')
 })
 
-app.get('/sw.js', (req, res) => {
+app.get('/sw.js', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/sw.js')
 })
 
-app.get('/default_profile.jpg', (req, res) => {
+app.get('/default_profile.jpg', cache(300), (req, res) => {
     res.sendFile(__dirname + '/profilePics/default_profile.jpg')
 })
 
-app.get('/camera.png', (req, res) => {
+app.get('/camera.png', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/camera.png')
 })
 
-app.get('/x-circle.svg', (req, res) => {
+app.get('/x-circle.svg', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/x-circle.svg')
 })
 
-app.get('/secret.css', (req, res) => {
+app.get('/secret.css', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/secretStyle.css')
 })
 
-app.get('/addRequests.jpg', (req, res) => {
+app.get('/addRequests.jpg', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/addRequest.png')
 })
 
-app.get('/pics/:pic', (req, res) => {
+app.get('/pics/:pic', cache(300), (req, res) => {
     const pic = req.params.pic
     res.sendFile(__dirname + `/profilePics/${pic}`)
 })
 
-app.get('/friendsSearch.js', (req, res) => {
+app.get('/friendsSearch.js', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/friendsSearch.js')
 })
 
-app.get('/removeFriend.png', (req, res) => {
+app.get('/removeFriend.png', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/removeFriend.png')
 })
 
-app.get('/cancel.png', (req, res) => {
+app.get('/cancel.png', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/cancel.png')
 })
 
-app.get('/node_modules/cropperjs/dist/cropper.min.js', (req, res) => {
+app.get('/node_modules/cropperjs/dist/cropper.min.js', cache(300), (req, res) => {
     res.sendFile(__dirname + '/node_modules/cropperjs/dist/cropper.min.js')
 })
 
-app.get('/node_modules/cropperjs/dist/cropper.min.css', (req, res) => {
+app.get('/node_modules/cropperjs/dist/cropper.min.css', cache(300), (req, res) => {
     res.sendFile(__dirname + '/node_modules/cropperjs/dist/cropper.min.css')
 })
 
-app.get('/tick.png', (req, res) => {
+app.get('/tick.png', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/tick.png')
 })
 
-app.get('/node_modules/device-uuid/lib/device-uuid.js', (req, res) => {
+app.get('/node_modules/device-uuid/lib/device-uuid.js', cache(300), (req, res) => {
     res.sendFile(__dirname + '/node_modules/device-uuid/lib/device-uuid.js')
 })
 
-app.get('/request.jpg', (req, res) => {
+app.get('/request.jpg', cache(300), (req, res) => {
     res.sendFile(__dirname + '/public/request.png')
 })
 
-app.get('/find', find_auth, async (req, res) => {
+app.get('/find', cache(300) && find_auth, async (req, res) => {
     io.once('connection', async (socket) => {
         const find = await Users.find()
         socket.emit('searchData', find)
@@ -880,7 +881,7 @@ app.get('/find', find_auth, async (req, res) => {
 
 })
 
-app.get('/requests', reqAuth, async (req, res) => {
+app.get('/requests', cache(300) && reqAuth, async (req, res) => {
 
     io.once('connection', (socket) => {
         socket.on('declineRequest', async request => {
@@ -947,13 +948,13 @@ app.get('/requests', reqAuth, async (req, res) => {
     })
 })
 
-app.get('/users', getUserEmail, (req, res) => {
+app.get('/users', cache(300) && getUserEmail, (req, res) => {
     const username = req.cookies.user
     const to = req.query.user
     res.redirect(`/chats/${username}_${to}`)
 })
 
-app.get('/chats/:chat', async (req, res) => {
+app.get('/chats/:chat', cache(300), async (req, res) => {
 
     if (!req.cookies.user) {
         res.redirect('/login')
@@ -1454,6 +1455,6 @@ app.get('/chats/:chat', async (req, res) => {
 
 })
 
-app.get('/*', (req, res) => {
+app.get('/*', cache(300), (req, res) => {
     res.render('error')
 })
