@@ -71,20 +71,20 @@ self.addEventListener('notificationclick', event => {
     )
 })
 
-self.addEventListener('pushsubscriptionchange', (event) => {
-    event.waitUntil(self.registration.pushManager.subscribe(event.oldSubscription.options)
-        .then(subscription => {
-            fetch('/subchange', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    endpoint: subscription.endpoint,
-                    p256dh: subscription.keys.p256dh,
-                    auth: subscription.keys.auth,
-                    serverKey: event.oldSubscription.options.applicationServerKey
-                })
-            })
-        }))
-})
+// self.addEventListener('pushsubscriptionchange', (event) => {
+//     event.waitUntil(self.registration.pushManager.subscribe(event.oldSubscription.options)
+//         .then(subscription => {
+//             fetch('/subchange', {
+//                 method: "POST",
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 },
+//                 body: JSON.stringify({
+//                     endpoint: subscription.endpoint,
+//                     p256dh: subscription.keys.p256dh,
+//                     auth: subscription.keys.auth,
+//                     serverKey: event.oldSubscription.options.applicationServerKey
+//                 })
+//             })
+//         }))
+// })
