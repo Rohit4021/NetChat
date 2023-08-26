@@ -11,6 +11,44 @@
     <link rel="stylesheet" href="/node_modules/cropperjs/dist/cropper.min.css">
     <style>
 
+        #slidecontainer {
+            width: 100%;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 50%;
+            height: 10px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #04AA6D;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #04AA6D;
+            cursor: pointer;
+        }
+
         #imageCropper {
             background-color: #000;
             flex-direction: column;
@@ -34,6 +72,15 @@
             align-items: center;
             justify-content: space-between;
         }
+
+        .cropper-container {
+            max-width: 30%;
+        }
+
+        .cropper-canvas img {
+            display: none;
+        }
+
 
         @media screen and (min-width: 700px) {
             #cropOptions {
@@ -60,11 +107,14 @@
 </div>
 <div class="confirm" id="imageCropper" style="display: none;">
     <div id="cropOptions">
-        <img src="/cancel.png" class="crop" onclick="document.getElementById('form').reset(); document.getElementById('imageCropper').style.display = 'none'">
+        <img src="/cancel.png" class="crop" onclick="document.getElementById('form').reset(); window.location.reload()">
         <img src="/tick.png" class="crop" id="crop" style="width: 35px">
     </div>
     <div>
-        <img src="/removeFriend.png" width="100%" id="cropImage">
+        <img src="" width="100%" id="cropImage">
+        <div id="slidecontainer">
+            <input type="range" min="1" max="100" value="1" class="slider" id="myRange">
+        </div>
     </div>
 </div>
 <div class="container">
@@ -126,6 +176,8 @@
     }
 
     socket.on('loadProfile', namePic => {
+        console.log('loadProfile')
+
         const profile = document.getElementsByClassName('profile_data')
         const img = document.createElement('img')
         img.setAttribute('src', namePic.myPic)
@@ -209,16 +261,10 @@
     })
 
 
-    setTimeout(() => {
-        const button = document.getElementsByClassName('camera_button')
-        button[0].addEventListener('change', () => {
-            window.location.reload()
-        })
-    }, 3000)
-
-
     socket.on('friends', list => {
+        console.log('friends')
         for (let i = 0; i < list.friendsList.length; i++) {
+            console.log('friends_loop')
             if (list.length !== 0) {
                 const friendsCount = document.getElementById('friends_count')
                 friendsCount.innerText = `Friends (${list.friendsList.length})`
@@ -282,10 +328,32 @@
                 scalable: false
             })
 
+            const imageWidth = image.width
+            const slider = document.getElementById('myRange')
+
+            slider.style.width = `${imageWidth}0px`
+
+            slider.oninput = () => {
+                let zoomValue
+                if (image.naturalHeight > image.naturalWidth) {
+                    zoomValue = slider.value / 50
+                } else {
+                    zoomValue = slider.value / 80
+                }
+                cropper.zoomTo(zoomValue)
+            }
+
+
+
 
 
             document.getElementById('crop').addEventListener('click', () => {
-                const croppedImage = cropper.getCroppedCanvas().toDataURL("image/png")
+                const croppedImage = cropper.getCroppedCanvas({
+                    maxHeight: 700,
+                    maxWidth: 700,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: "high"
+                }).toDataURL("image/png", 1)
                 const hid = document.getElementById('hidEl')
                 hid.value = croppedImage
                 form.submit()
