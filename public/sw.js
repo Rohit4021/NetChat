@@ -1,7 +1,8 @@
 const cacheName = 'js13kPWA-v1'
 const appShellFiles = [
     "/index.js",
-    "/favicon.png"
+    "/favicon.png",
+    "../server.js"
 ]
 
 self.addEventListener("install", (event) => {
@@ -71,20 +72,21 @@ self.addEventListener('notificationclick', event => {
     )
 })
 
-// self.addEventListener('pushsubscriptionchange', (event) => {
-//     event.waitUntil(self.registration.pushManager.subscribe(event.oldSubscription.options)
-//         .then(subscription => {
-//             fetch('/subchange', {
-//                 method: "POST",
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 },
-//                 body: JSON.stringify({
-//                     endpoint: subscription.endpoint,
-//                     p256dh: subscription.keys.p256dh,
-//                     auth: subscription.keys.auth,
-//                     serverKey: event.oldSubscription.options.applicationServerKey
-//                 })
-//             })
-//         }))
-// })
+self.addEventListener('pushsubscriptionchange', (event) => {
+    console.log('Without wait')
+    event.waitUntil(
+        console.log('Wait'),
+        fetch('/subchange', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                old_endpoint: event.oldSubscription ? event.oldSubscription.endpoint : null,
+                new_endpoint: event.newSubscription ? event.newSubscription.endpoint : null,
+                new_p256dh: event.newSubscription ? event.newSubscription.toJSON().keys.p256dh : null,
+                new_auth: event.newSubscription ? event.newSubscription.toJSON().keys.auth : null
+            })
+        }),
+    )
+})
