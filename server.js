@@ -25,12 +25,11 @@ const {uploadImage} = require('./uploadImage')
 const OneSignal = require('onesignal-node')
 const https = require('https')
 const cors = require('cors')
-const {request} = require("express");
 require('dotenv').config()
 
 const PORT = process.env.PORT || 8000
 
-const client = new OneSignal.Client("3fa0d734-1732-41e3-acdb-b238ebdc59e0", "NjAxNzJjYjktYjRkMC00NjIzLWEzNDctNGVjNWQyMDM5MGQ2")
+const client = new OneSignal.Client(process.env.ONESIGNAL_APP_ID, process.env.ONESIGNAL_API_KEY)
 
 const corsOpts = {
     origin: '*',
@@ -555,29 +554,29 @@ app.post('/register', async (req, res) => {
 
                     createUser()
 
-                    // const transporter = nodemailer.createTransport({
-                    //     service: 'gmail',
-                    //     auth: {
-                    //         user: 'rohitkm40021@gmail.com',
-                    //         pass: process.env.EMAIL_PASS
-                    //     }
-                    // })
+                    const transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
+                            user: 'rohitkm40021@gmail.com',
+                            pass: process.env.EMAIL_PASS
+                        }
+                    })
 
-                    // const mailOptions = {
-                    //     from: 'rohitkm40021@gmail.com',
-                    //     to: email,
-                    //     subject: 'Activation Mail',
-                    //     text: 'Thank you for registering to our website. To activate your account, please open this link :- ' +
-                    //         `https://netchat-dwqp.onrender.com/user?email=${email}`
-                    // }
+                    const mailOptions = {
+                        from: 'rohitkm40021@gmail.com',
+                        to: email,
+                        subject: 'Activation Mail',
+                        text: 'Thank you for registering to our website. To activate your account, please open this link :- ' +
+                            `https://netchat-nz-production.up.railway.app/user?email=${email}`
+                    }
 
-                    // transporter.sendMail(mailOptions, function (error, info) {
-                    //     if (error) {
-                    //         console.log(error)
-                    //     } else {
-                    //         console.log('Email sent : ' + info)
-                    //     }
-                    // })
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            console.log('Email sent : ' + info)
+                        }
+                    })
 
                 }
             }
