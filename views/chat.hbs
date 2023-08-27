@@ -43,6 +43,12 @@
 <script src="/index.js"></script>
 <script>
 
+    window.onpageshow = function (e) {
+        if (window.performance.navigation.type === 2) {
+            window.location.reload()
+        }
+    }
+
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register(`${window.location.protocol}//${window.location.host}/sw.js`)
     }

@@ -4,10 +4,10 @@ const res = require("express/lib/response");
 mongoose.set('strictQuery', false)
 require('dotenv').config()
 
-mongoose.connect(`mongodb+srv://${process.env.USER}:${process.env.PASS}@chatapp.t4fgyxk.mongodb.net/?retryWrites=true&w=majority`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-// mongoose.connect(`mongodb://0.0.0.0/netchat`, {
+// mongoose.connect(`mongodb+srv://${process.env.USER}:${process.env.PASS}@chatapp.t4fgyxk.mongodb.net/?retryWrites=true&w=majority`, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+mongoose.connect(`mongodb://0.0.0.0/netchat`, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true
 }).then(() => {
@@ -123,6 +123,21 @@ const conn = new mongoose.Schema({
 })
 
 const Chats = new mongoose.model('Chat', conn)
+
+async function deleteUsers() {
+    await Users.deleteMany({
+        success: true
+    }).then(r => console.log(r))
+}
+
+async function deleteChats() {
+    await Chats.deleteMany({
+        deleteChat: 'none'
+    }).then(r => console.log(r))
+}
+
+// deleteChats()
+// deleteUsers()
 
 module.exports = {
     Chats,

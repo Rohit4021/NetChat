@@ -310,8 +310,12 @@ app.get('/', auth, async (req, res) => {
 
                 const lastMsg = getChat[0].chats.length - 1
 
-                if (getChat[0].chats[lastMsg].username !== req.cookies.user && getChat[0].chats[lastMsg].status !== 'read') {
-                    pendingChats.push(chats[i])
+                try {
+                    if (getChat[0].chats[lastMsg].username !== req.cookies.user && getChat[0].chats[lastMsg].status !== 'read') {
+                        pendingChats.push(chats[i])
+                    }
+                } catch (e) {
+                    console.log(e)
                 }
             }
 
@@ -908,19 +912,7 @@ app.get('/requests', reqAuth, async (req, res) => {
                 }
             })
 
-            await Users.updateOne({
-                username: req.cookies.user
-            }, {
-                $push: {
-                    friends: {
-                        friend: request,
-                        success: true
-                    }
-                }
-            })
-
-
-            Users.findOneAndUpdate({
+            await Users.findOneAndUpdate({
                 username: request
             }, {
                 $set: {
@@ -930,6 +922,17 @@ app.get('/requests', reqAuth, async (req, res) => {
                 arrayFilters: [{
                     "el.friend": req.cookies.user
                 }]
+            })
+
+            await Users.updateOne({
+                username: req.cookies.user
+            }, {
+                $push: {
+                    friends: {
+                        friend: request,
+                        success: true
+                    }
+                }
             })
         })
     })
@@ -1057,8 +1060,6 @@ app.get('/chats/:chat', async (req, res) => {
             const proPic = await Users.find({
                 username: msg.user
             })
-
-            console.log('hi')
 
             let dbMsg
 

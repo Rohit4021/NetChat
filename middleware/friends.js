@@ -21,7 +21,13 @@ const friends = async (req, res, next) => {
                     const friendUsername = await friends[i].friend
                     const friend = friendUsername.split(" ").join("").toLowerCase()
 
-                    res.write(`<div class="friend_container" onclick="this.childNodes[0].click()" ><a href="/profile/${friend}" style="display: inline-block; text-decoration: none" class="username"><h3>${friend}</h3></a></div>`)
+                    const pic = await Users.find({
+                        username: friend
+                    })
+                    const friendPic = await pic[0].pic
+                    const friendProPic = friendPic.split(" ").join("").toLowerCase()
+
+                    res.write(`<div class="friend_container" onclick="this.childNodes[0].click()" ><img src="${friendProPic}" class="profile" onclick="document.getElementById('${friend}').click()"><a id="${friend}" href="/profile/${friend}" style="display: inline-block; text-decoration: none" class="username"><h3>${friend}</h3></a></div>`)
                 }
 
             }

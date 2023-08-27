@@ -367,6 +367,13 @@
         event.preventDefault()
     }
 
+
+    window.onpageshow = function (e) {
+        if (window.performance.navigation.type === 2) {
+            window.location.reload()
+        }
+    }
+
 </script>
 </body>
 </html>

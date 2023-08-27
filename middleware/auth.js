@@ -5,6 +5,28 @@ const auth = async (req, res, next) => {
 
         res.setHeader('Content-type', 'text/html')
 
+        try {
+            await Users.findOne({username: req.cookies.user}).then(async r => {
+                for (let i = 0; i < r.friends.length; i++) {
+                    if (i !== 0) {
+                        if (r.friends[i].friend === r.friends[i - 1].friend) {
+                            await Users.updateOne({
+                                username: req.cookies.user
+                            }, {
+                                $pull: {
+                                    friends: {
+                                        _id: r.friends[i]._id
+                                    }
+                                }
+                            }).then(r => console.log(r))
+                        }
+                    }
+                }
+            })
+        } catch (e) {
+            console.log(e)
+        }
+
         await Users.find({
             username: req.cookies.user
         }).then((pic) => {
