@@ -4,7 +4,7 @@ if ('serviceWorker' in navigator) {
         const reg = await navigator.serviceWorker.ready
         let uuid = new DeviceUUID().get()
         const urlSplit = document.referrer.split('/')
-        
+
         if (urlSplit[3] === 'login') {
             socket.emit('getKey', uuid)
         }
@@ -23,10 +23,9 @@ if ('serviceWorker' in navigator) {
                     }
 
                     socket.emit('sendToDatabase', things)
-
-
                 }
             })
         })
     })
 }
+

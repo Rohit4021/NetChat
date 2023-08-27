@@ -312,10 +312,8 @@ p {
     border-radius: 50%;
     left: 24.5%;
     position: fixed;
-    display: inline-block;
+    display: none;
 }
-
-
 
 @media screen and (max-width: 700px) {
 
