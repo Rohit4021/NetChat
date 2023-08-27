@@ -5,7 +5,7 @@ const friends = async (req, res, next) => {
 
         res.setHeader('Content-type', 'text/html')
 
-        res.write(`<head><title>NetChat</title><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8"><link rel="icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" type="text/css" href="/secret.css"><script src="socket.io/socket.io.js"></script><script src="/friendsSearch.js"></script></head><body onload="loaded()"><div class="main"><div class="input_div"><input type="text" oninput="search(this)" id="input_text" spellcheck="false"><img src="/x-circle.svg" id="clear" onclick="document.getElementById('input_text').value = "";window.location.reload();"></div>`)
+        res.write(`<head><title>NetChat</title><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8"><link rel="icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" type="text/css" href="/secret.css"><script src="socket.io/socket.io.js"></script><script src="/friendsSearch.js"></script><script>window.onpageshow = function () { if (window.performance.navigation.type === 2) { window.location.reload() } }</script></head><body onload="loaded()"><div class="main"><div class="input_div"><input type="text" oninput="search(this)" id="input_text" spellcheck="false"><img src="/x-circle.svg" id="clear" onclick="document.getElementById('input_text').value = "";window.location.reload();"></div>`)
 
         const token = req.cookies.user
 

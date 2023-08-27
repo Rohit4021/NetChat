@@ -7,7 +7,7 @@ const reqAuth = async (req, res, next) => {
         res.setHeader('Content-type', 'text/html')
 
         const users = await Users.find({username: req.cookies.user})
-        res.write('<head><title>NetChat</title><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8"><link rel="icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" type="text/css" href="/secret.css"><script src="/socket.io/socket.io.js"></script><script>const socket = io.connect()</script></head><body><div class="main">')
+        res.write('<head><title>NetChat</title><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8"><link rel="icon" type="image/x-icon" href="/favicon.png"><link rel="stylesheet" type="text/css" href="/secret.css"><script src="/socket.io/socket.io.js"></script><script>const socket = io.connect()</script><script>window.onpageshow = function () { if (window.performance.navigation.type === 2) { window.location.reload() } }</script></head><body><div class="main">')
 
         for (let i = 0; i < users.length; i++) {
             if (users[0].requests.length !== 0) {
