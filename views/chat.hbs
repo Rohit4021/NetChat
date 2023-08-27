@@ -35,7 +35,7 @@
         <textarea id="textarea" cols="30" rows="1" placeholder="Write a message..." spellcheck="false" oninput="this.scrollTop = this.scrollHeight; if (this.value !== '') { document.getElementById('imgLogo').style.display = 'none'; document.getElementById('send').style.display = 'inline-block'; } else { document.getElementById('imgLogo').style.display = 'inline-block'; document.getElementById('send').style.display = 'none'; }"></textarea>
         <i class="bi bi-send" id="send" onclick="const textarea = document.getElementById('textarea'); sendMessage(textarea.value); textarea.value = ''; this.style.display = 'none'; document.getElementById('imgLogo').style.display = 'inline-block';"></i>
         <input type="file" onchange="change(this)" id="imageUpload">
-        <label for="imageUpload"><i class="bi bi-image" id="imgLogo"></i></label>
+        <label id="imgLabel" for="imageUpload"><i class="bi bi-image" id="imgLogo"></i></label>
     </div>
 </section>
 <script src="/socket.io/socket.io.js"></script>
