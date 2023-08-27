@@ -422,19 +422,22 @@ let id
 
 function mouseDown() {
     id = this.id
-    mouseUp()
-    mouseTimer = window.setTimeout(hold, 500)
+    if (!mouseTimer) {
+        mouseTimer = setTimeout(hold, 800)
+    }
 }
 
 function mouseUp() {
     if (mouseTimer) {
-        window.clearTimeout(mouseTimer)
+        clearTimeout(mouseTimer)
+        mouseTimer = null
     }
 }
 
 function hold() {
-    document.getElementById('imgLogo').style.display = 'none'
+    document.getElementById('imgLogo').remove()
     textarea.style.display = 'none'
+    document.getElementsByClassName('bi-camera-fill')[0].style.display = 'none'
     document.getElementById('info').style.display = 'inline-block'
     document.getElementById('delete').style.display = 'inline-block'
     setTimeout(() => {
@@ -477,6 +480,13 @@ function dfa() {
 
 function hideMM() {
     textarea.style.display = 'block'
+    const i = document.createElement('i')
+    i.classList.add('bi', 'bi-image')
+    i.id = 'imgLogo'
+    i.style.marginTop = '-45px'
+    i.style.position = 'absolute'
+    document.getElementsByClassName('bi-camera-fill')[0].style.display = 'inline-block'
+    document.getElementById('imgLabel').appendChild(i)
     document.getElementById('info').style.display = 'none'
     document.getElementById('delete').style.display = 'none'
 
@@ -543,10 +553,15 @@ async function showPreview(div) {
     div.style.width = '100%'
     div.style.height = '100vh'
     div.style.position = 'fixed'
+    div.style.maxWidth = '100%'
+
+    attachExitPreview(div)
+}
+
+function attachExitPreview(div) {
     setTimeout(() => {
         document.body.onclick = () => {
             exitPreview(div)
-            event.preventDefault()
         }
     }, 1000)
 }
