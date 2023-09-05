@@ -11,44 +11,76 @@ self.addEventListener("install", (event) => {
     }))
 })
 
-self.addEventListener('push', async (payload) => {
-    const data = payload.data.json()
-    await self.skipWaiting().then(async () => {
-        await clients.matchAll().then((allClients) => {
-            if (allClients.length === 0) {
-                self.registration.showNotification('NetChat', {
-                    body: `${data.title} : ${data.msg}`,
-                    icon: data.icon,
-                    vibrate: [100, 50, 100],
-                    data: data.this
-                })
-            }
+self.addEventListener('sync', () => {
+    self.dispatchEvent(new ExtendableEvent('pushsubscriptionchange'))
+})
 
-            for (let i = 0; i < allClients.length; i++) {
-                if (allClients[i].url.includes('/chats/')) {
-                    const clientUrl = allClients[i].url.split('/')
-                    const client = clientUrl[4].split('_')
-
-                    if (client[1] === data.title && allClients[i].visibilityState === 'visible') {
-                    } else {
-                        self.registration.showNotification('NetChat', {
-                            body: `${data.title} : ${data.msg}`,
-                            icon: data.icon,
-                            vibrate: [100, 50, 100],
-                            data: data.this
-                        })
-                    }
-                } else {
-                    self.registration.showNotification('NetChat', {
-                        body: `${data.title} : ${data.msg}`,
-                        icon: data.icon,
-                        vibrate: [100, 50, 100],
-                        data: data.this
-                    })
-                }
-            }
-        })
+self.addEventListener('periodicsync', async event => {
+    const cookie = await self.registration.cookies.getSubscriptions()
+    console.log(cookie[0].name)
+    self.registration.pushManager.getSubscription().then(sub => {
+        fetch('/subchange', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                deviceId: cookie[0].name,
+                new_endpoint: sub.toJSON().endpoint,
+                new_p256dh: sub.toJSON().keys.p256dh,
+                new_auth: sub.toJSON().keys.auth
+            })
+        }).then(r => console.log(r))
     })
+})
+
+self.addEventListener('push', async (payload) => {
+    console.log(payload.data.json())
+    const data = payload.data.json()
+    if (data.type === 'pushsubscriptionchange') {
+        await self.registration.showNotification('Subscription Change', {
+            body: 'Check Subs',
+            vibrate: [100, 50, 100]
+        })
+
+        self.dispatchEvent(new ExtendableEvent('pushsubscriptionchange'))
+    }
+    // await self.skipWaiting().then(async () => {
+    //     await clients.matchAll().then((allClients) => {
+    //         if (allClients.length === 0) {
+    //             self.registration.showNotification('NetChat', {
+    //                 body: `${data.title} : ${data.msg}`,
+    //                 icon: data.icon,
+    //                 vibrate: [100, 50, 100],
+    //                 data: data.this
+    //             })
+    //         }
+    //
+    //         for (let i = 0; i < allClients.length; i++) {
+    //             if (allClients[i].url.includes('/chats/')) {
+    //                 const clientUrl = allClients[i].url.split('/')
+    //                 const client = clientUrl[4].split('_')
+    //
+    //                 if (client[1] === data.title && allClients[i].visibilityState === 'visible') {
+    //                 } else {
+    //                     self.registration.showNotification('NetChat', {
+    //                         body: `${data.title} : ${data.msg}`,
+    //                         icon: data.icon,
+    //                         vibrate: [100, 50, 100],
+    //                         data: data.this
+    //                     })
+    //                 }
+    //             } else {
+    //                 self.registration.showNotification('NetChat', {
+    //                     body: `${data.title} : ${data.msg}`,
+    //                     icon: data.icon,
+    //                     vibrate: [100, 50, 100],
+    //                     data: data.this
+    //                 })
+    //             }
+    //         }
+    //     })
+    // })
 })
 
 self.addEventListener('notificationclick', event => {
@@ -72,21 +104,30 @@ self.addEventListener('notificationclick', event => {
     )
 })
 
-self.addEventListener('pushsubscriptionchange', (event) => {
-    console.log('Without wait')
-    event.waitUntil(
-        console.log('Wait'),
-        fetch('/subchange', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                old_endpoint: event.oldSubscription ? event.oldSubscription.endpoint : null,
-                new_endpoint: event.newSubscription ? event.newSubscription.endpoint : null,
-                new_p256dh: event.newSubscription ? event.newSubscription.toJSON().keys.p256dh : null,
-                new_auth: event.newSubscription ? event.newSubscription.toJSON().keys.auth : null
+self.addEventListener('pushsubscriptionchange', async () => {
+    const deviceId = await self.registration.cookies.getSubscriptions()
+    const res = await fetch(`/publickey?deviceid=${deviceId[0].name}`)
+    const publicKey = await res.text()
+    await self.registration.pushManager.getSubscription().then((sub) => {
+        sub.unsubscribe().then(() => {
+            self.registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: publicKey
+            }).then(sub => {
+                const push = sub.toJSON()
+                fetch('/subchange', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        deviceId: deviceId[0].name,
+                        new_endpoint: push.endpoint,
+                        new_p256dh: push.keys.p256dh,
+                        new_auth: push.keys.auth
+                    })
+                }).then(async r => console.log(JSON.parse(await r.text()))).catch(e => console.log(e))
             })
-        }),
-    )
+        })
+    })
 })

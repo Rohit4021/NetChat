@@ -1,0 +1,17 @@
+{
+  "lang": "en-us",
+  "name": "NetChat - Chatting App",
+  "short_name": "NetChat",
+  "description": "A chatting app created by just a single developer.",
+  "start_url": "/",
+  "background_color": "#2f3d58",
+  "theme_color": "#2f3d58",
+  "orientation": "any",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512"
+    }
+  ]
+}

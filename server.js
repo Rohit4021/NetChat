@@ -25,6 +25,7 @@ const {uploadImage} = require('./uploadImage')
 const OneSignal = require('onesignal-node')
 const https = require('https')
 const cors = require('cors')
+const schedule = require('node-schedule')
 require('dotenv').config()
 
 const PORT = process.env.PORT || 8000
@@ -49,6 +50,7 @@ app.set('view engine', 'hbs')
 app.use(express.urlencoded({
     extended: true
 }))
+app.use(express.json())
 
 server.listen(PORT, () => {
     console.log(`Listening at port : ${PORT}`)
@@ -62,37 +64,76 @@ const split = (word, sign) => {
     return word.split(sign)
 }
 
-const sendNotification = (data) => {
-    const headers = {
-        "Content-Type": "application/json; charset=utf-8",
-        "Authorization": "Basic NjAxNzJjYjktYjRkMC00NjIzLWEzNDctNGVjNWQyMDM5MGQ2"
+async function updateSub() {
+    const users = await Users.find()
+    console.log(`Users length ===>  ${users.length}`)
+    for (let i = 0; i < users.length; i++) {
+        const subscription = users[i].subscription
+        console.log(`Subscription length ===> ${subscription.length}`)
+
+        let publicKey
+        let privateKey
+
+        for (let x = 0; x < users[i].vapidKeys.length; x++) {
+            const keys = users[i].vapidKeys[x]
+            publicKey = keys.publicKey
+            privateKey = keys.privateKey
+
+            console.log(`Vapid Keys Length ====> ${users[i].vapidKeys.length}`)
+
+            push.setVapidDetails(
+                'mailto:test@code.co.uk',
+                publicKey,
+                privateKey
+            )
+
+            const payload = {
+                type: 'pushsubscriptionchange'
+            }
+
+            for (let y = 0; y < users[i].subscription.length; y++) {
+
+                if (keys.deviceId === users[i].subscription[y].deviceId) {
+                    console.log('match')
+                    let pushSubscription = {
+                        endpoint: users[i].subscription[y].endpoint,
+                        expirationTime: null,
+                        keys: {
+                            p256dh: users[i].subscription[y].p256dh,
+                            auth: users[i].subscription[y].auth
+                        }
+                    }
+
+                    push.sendNotification(pushSubscription, JSON.stringify(payload))
+                }
+            }
+        }
     }
-
-    const options = {
-        host: "onesignal.com",
-        port: 443,
-        path: "api/v1/notifications",
-        method: "POST",
-        headers: headers
-    }
-
-    const req = https.request(options, (res) => {
-        res.on('data', (data) => {
-            console.log('Response: ')
-            // console.log(JSON.parse(data))
-            console.log(data)
-            console.log(res.statusCode)
-        })
-    })
-
-    req.on('error', (e) => {
-        console.log('ERROR: ')
-        console.log(e)
-    })
-
-    req.write(JSON.stringify(data))
-    req.end()
 }
+
+schedule.scheduleJob({
+    hour: 1,
+    minute: 0,
+    second: 0
+}, updateSub)
+
+schedule.scheduleJob({
+    hour: 6,
+    minute: 0,
+    second: 0
+}, updateSub)
+
+schedule.scheduleJob({
+    hour: 12,
+    minute: 0,
+    second: 0
+}, updateSub)
+
+schedule.scheduleJob({
+    hour: 18,
+    minute: 0,
+    second: 0
+}, updateSub)
 
 const removeRequestFun = async (user, friend) => {
     try {
@@ -199,17 +240,34 @@ app.get('/findData', async (req, res) => {
     }
 })
 
+app.get('/publickey', async (req, res) => {
+    const deviceId = req.query.deviceid
+
+    const publicKey = await Users.find({
+        vapidKeys: {
+            $elemMatch: {
+                deviceId: deviceId
+            }
+        }
+    })
+
+    const pubKey = publicKey[0].vapidKeys[0].publicKey
+
+    console.log(pubKey)
+
+    res.send(pubKey)
+})
+
 app.post('/subchange', async (req, res) => {
-    const old_endpoint = req.body.old_endpoint
+    const deviceId = req.body.deviceId
     const new_endpoint = req.body.new_endpoint
     const new_p256dh = req.body.new_p256dh
     const new_auth = req.body.new_auth
 
-
     await Users.findOneAndUpdate({
         subscription: {
             $elemMatch: {
-                endpoint: old_endpoint
+                deviceId: deviceId
             }
         }
     }, {
@@ -220,9 +278,16 @@ app.post('/subchange', async (req, res) => {
         }
     }, {
         arrayFilters: [{
-            "el._id": old_endpoint
+            "el.deviceId": deviceId
         }]
-    })
+    }).then(r => res.send(r)).catch(e => console.log(e))
+
+    fs.writeFileSync(`./temp/${new_auth}.json`, JSON.stringify({
+        endpoint: new_endpoint,
+        p256dh: new_p256dh,
+        auth: new_auth,
+        deviceId: deviceId
+    }))
 })
 
 app.get('/', auth, async (req, res) => {
@@ -755,6 +820,10 @@ app.get('/edit.css', (req, res) => {
     res.sendFile(__dirname + '/public/edit.css')
 })
 
+app.get('/manifest.json', (req, res) => {
+    res.sendFile(__dirname + '/public/manifest.json')
+})
+
 app.get('/style_profile.css', (req, res) => {
     res.sendFile(__dirname + '/public/style_profile.css')
 })
@@ -1006,14 +1075,16 @@ app.get('/chats/:chat', async (req, res) => {
         await Users.find({
             username: splitParam[1]
         }).then(find => {
-            const pic = find[0].pic
-            const nameProPic = find[0].name
-            const usernamePro = find[0].username
+            if (find.length !== 0) {
+                const pic = find[0].pic
+                const nameProPic = find[0].name
+                const usernamePro = find[0].username
 
-            socket.emit('proPic', {pic, nameProPic, usernamePro})
-            socket.emit('conn')
+                socket.emit('proPic', {pic, nameProPic, usernamePro})
+                socket.emit('conn')
+            }
         }).catch((err) => {
-            res.reload()
+            res.redirect(req.url)
         })
 
         socket.once('join', () => {
