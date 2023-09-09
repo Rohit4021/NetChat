@@ -194,6 +194,8 @@ const appendImage = (url, id, type) => {
     div.style.backgroundImage = `url("${url}")`
     messageArea.appendChild(div)
     msgStatus()
+
+    scrollToBottom()
 }
 
 socket.on('msg', (msg) => {
@@ -501,11 +503,8 @@ function copy() {
 
 function deleteChat() {
     socket.emit('deleteChat', name)
+    window.location.href = '/'
     document.getElementsByClassName('confirm')[0].style.display = 'none'
-
-    setTimeout(() => {
-        window.location.reload()
-    }, 1500)
 }
 
 function exitPreview(div) {

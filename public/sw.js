@@ -38,49 +38,50 @@ self.addEventListener('push', async (payload) => {
     console.log(payload.data.json())
     const data = payload.data.json()
     if (data.type === 'pushsubscriptionchange') {
-        await self.registration.showNotification('Subscription Change', {
-            body: 'Check Subs',
-            vibrate: [100, 50, 100]
+        console.log('pushsubscriptionchange')
+        self.dispatchEvent(new ExtendableEvent('pushsubscriptionchange'))
+    } else if (data.type === 'pushsubscription') {
+
+        console.log('pushsubscription')
+
+        await self.skipWaiting().then(async () => {
+            await clients.matchAll().then((allClients) => {
+                if (allClients.length === 0) {
+                    console.log('0')
+                    self.registration.showNotification('NetChat', {
+                        body: `${data.title} : ${data.msg}`,
+                        icon: data.icon,
+                        vibrate: [100, 50, 100],
+                        data: data.this
+                    })
+                }
+
+                for (let i = 0; i < allClients.length; i++) {
+                    if (allClients[i].url.includes('/chats/')) {
+                        const clientUrl = allClients[i].url.split('/')
+                        const client = clientUrl[4].split('_')
+
+                        if (client[1] !== data.title && allClients[i].visibilityState !== 'visible') {
+                            self.registration.showNotification('NetChat', {
+                                body: `${data.title} : ${data.msg}`,
+                                icon: data.icon,
+                                vibrate: [100, 50, 100],
+                                data: data.this
+                            })
+                        }
+                    } else {
+                        self.registration.showNotification('NetChat', {
+                            body: `${data.title} : ${data.msg}`,
+                            icon: data.icon,
+                            vibrate: [100, 50, 100],
+                            data: data.this
+                        })
+                    }
+                }
+            })
         })
 
-        self.dispatchEvent(new ExtendableEvent('pushsubscriptionchange'))
     }
-    // await self.skipWaiting().then(async () => {
-    //     await clients.matchAll().then((allClients) => {
-    //         if (allClients.length === 0) {
-    //             self.registration.showNotification('NetChat', {
-    //                 body: `${data.title} : ${data.msg}`,
-    //                 icon: data.icon,
-    //                 vibrate: [100, 50, 100],
-    //                 data: data.this
-    //             })
-    //         }
-    //
-    //         for (let i = 0; i < allClients.length; i++) {
-    //             if (allClients[i].url.includes('/chats/')) {
-    //                 const clientUrl = allClients[i].url.split('/')
-    //                 const client = clientUrl[4].split('_')
-    //
-    //                 if (client[1] === data.title && allClients[i].visibilityState === 'visible') {
-    //                 } else {
-    //                     self.registration.showNotification('NetChat', {
-    //                         body: `${data.title} : ${data.msg}`,
-    //                         icon: data.icon,
-    //                         vibrate: [100, 50, 100],
-    //                         data: data.this
-    //                     })
-    //                 }
-    //             } else {
-    //                 self.registration.showNotification('NetChat', {
-    //                     body: `${data.title} : ${data.msg}`,
-    //                     icon: data.icon,
-    //                     vibrate: [100, 50, 100],
-    //                     data: data.this
-    //                 })
-    //             }
-    //         }
-    //     })
-    // })
 })
 
 self.addEventListener('notificationclick', event => {

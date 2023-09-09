@@ -111,29 +111,13 @@ async function updateSub() {
     }
 }
 
-schedule.scheduleJob({
-    hour: 1,
-    minute: 0,
-    second: 0
-}, updateSub)
-
-schedule.scheduleJob({
-    hour: 6,
-    minute: 0,
-    second: 0
-}, updateSub)
-
-schedule.scheduleJob({
-    hour: 12,
-    minute: 0,
-    second: 0
-}, updateSub)
-
-schedule.scheduleJob({
-    hour: 18,
-    minute: 0,
-    second: 0
-}, updateSub)
+for (let i = 0; i < 24; i++) {
+    schedule.scheduleJob({
+        hour: i,
+        minute: 0,
+        second: 0
+    }, updateSub)
+}
 
 const removeRequestFun = async (user, friend) => {
     try {
@@ -291,6 +275,15 @@ app.post('/subchange', async (req, res) => {
 })
 
 app.get('/', auth, async (req, res) => {
+
+    const friend = await Users.find({username: req.cookies.user})
+    const friends = friend[0].friends
+
+    for (let i = 1; i < friends.length; i++) {
+        if (friends[i].friend === friends[i - 1].friend) {
+            friends[i]._id.deleteOne().then(r => res.redirect('/'))
+        }
+    }
 
     io.once('connection', async socket => {
 
@@ -1223,7 +1216,8 @@ app.get('/chats/:chat', async (req, res) => {
                     const payload = {
                         title: splitParam[0],
                         icon: pic[0].pic,
-                        this: splitParam[1]
+                        this: splitParam[1],
+                        type: 'pushsubscription'
                     }
 
                     if (msg.type === 'image') {

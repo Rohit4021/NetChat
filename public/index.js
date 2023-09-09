@@ -11,6 +11,8 @@ if ('serviceWorker' in navigator) {
         const reg = await navigator.serviceWorker.ready
         const urlSplit = document.referrer.split('/')
 
+        await reg.pushManager.getSubscription().then(sub => console.log(sub.options.applicationServerKey))
+
         // try {
         //     await reg.sync.register("sync")
         // } catch (e) {
