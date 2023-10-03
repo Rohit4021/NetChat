@@ -12,13 +12,14 @@ const find_auth = async (req, res, next) => {
 
             for (let i = 0; i < await users.length; i++) {
                 const username = await users[i].username
+                const pic = users[i].pic.split(" ").join("").toLowerCase()
 
 
                 if (username === req.cookies.user) {
 
                 } else {
                     if (users[i].success === true) {
-                        res.write(`<div class="container"><h3 class="username" style="display: inline-block">${username}</h3><button onclick="add(this)" class="link_container" id="${username}"><a id="link" class="link">Add Friend</a></button></div><br>`)
+                        res.write(`<div class="friend_container" id="removeAct" style="padding: 10px 20px 8px 0;"><img src="${pic}" class="profile"/><a class="username" style="display: inline-block; text-decoration: none"><h3>${username}</h3></a><button onclick="add(this)" class="link_container" id="${username}"><a id="link" class="link" style="font-size: 15px;">Add</a></button></div><br>`)
                     }
                 }
 

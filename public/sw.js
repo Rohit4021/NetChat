@@ -5,14 +5,16 @@ const appShellFiles = [
     "../server.js"
 ]
 
+let clientId
+
 self.addEventListener("install", (event) => {
     event.waitUntil(caches.open(cacheName).then((cache) => {
         cache.addAll(appShellFiles)
     }))
 })
 
-self.addEventListener('sync', () => {
-    self.dispatchEvent(new ExtendableEvent('pushsubscriptionchange'))
+self.addEventListener('fetch', (event) => {
+    clientId = event.clientId
 })
 
 self.addEventListener('periodicsync', async event => {
@@ -35,41 +37,40 @@ self.addEventListener('periodicsync', async event => {
 })
 
 self.addEventListener('push', async (payload) => {
-    console.log(payload.data.json())
     const data = payload.data.json()
     if (data.type === 'pushsubscriptionchange') {
-        console.log('pushsubscriptionchange')
         self.dispatchEvent(new ExtendableEvent('pushsubscriptionchange'))
     } else if (data.type === 'pushsubscription') {
-
-        console.log('pushsubscription')
-
         await self.skipWaiting().then(async () => {
-            await clients.matchAll().then((allClients) => {
-                if (allClients.length === 0) {
-                    console.log('0')
-                    self.registration.showNotification('NetChat', {
-                        body: `${data.title} : ${data.msg}`,
-                        icon: data.icon,
-                        vibrate: [100, 50, 100],
-                        data: data.this
-                    })
-                }
+            if (clientId === undefined) {
+                await self.registration.showNotification('NetChat', {
+                    body: `${data.title} : ${data.msg}`,
+                    icon: data.icon,
+                    vibrate: [100, 50, 100],
+                    data: data.this
+                })
+            } else {
+                await clients.get(clientId).then((allClients) => {
+                    console.log(allClients)
 
-                for (let i = 0; i < allClients.length; i++) {
-                    if (allClients[i].url.includes('/chats/')) {
-                        const clientUrl = allClients[i].url.split('/')
+                    if (allClients.url.includes('/chats/')) {
+                        console.log('includes')
+                        const clientUrl = allClients.url.split('/')
                         const client = clientUrl[4].split('_')
 
-                        if (client[1] !== data.title && allClients[i].visibilityState !== 'visible') {
+                        if (client[1] === data.title && allClients.visibilityState === 'visible') {
+                        } else {
                             self.registration.showNotification('NetChat', {
                                 body: `${data.title} : ${data.msg}`,
                                 icon: data.icon,
                                 vibrate: [100, 50, 100],
                                 data: data.this
                             })
+
+                            console.log('not visible')
                         }
                     } else {
+                        console.log('not include')
                         self.registration.showNotification('NetChat', {
                             body: `${data.title} : ${data.msg}`,
                             icon: data.icon,
@@ -77,8 +78,8 @@ self.addEventListener('push', async (payload) => {
                             data: data.this
                         })
                     }
-                }
-            })
+                })
+            }
         })
 
     }

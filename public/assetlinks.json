@@ -1,0 +1,26 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.netchat",
+      "sha256_cert_fingerprints": [
+        "E6:AC:9A:FE:48:94:ED:FB:B0:7D:88:D2:14:5F:6F:0D:38:09:08:F2:38:E1:FA:E4:37:54:90:A2:DF:AA:B2:32"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.netchat",
+      "sha256_cert_fingerprints": [
+        "E6:AC:9A:FE:48:94:ED:FB:B0:7D:88:D2:14:5F:6F:0D:38:09:08:F2:38:E1:FA:E4:37:54:90:A2:DF:AA:B2:32"
+      ]
+    }
+  }
+]

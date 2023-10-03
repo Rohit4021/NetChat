@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser')
 const nodemailer = require('nodemailer')
 const fs = require('fs')
 const validator = require('validator')
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, { maxHttpBufferSize: 1e7 })
 const path = require("path");
 const short = require('short-uuid')
 const bcrypt = require('bcrypt')
@@ -319,11 +319,9 @@ app.get('/', auth, async (req, res) => {
                     }
                 })
 
-                console.log('subs')
-
-                // if (subs[0].subscription.length === 0) {
-                socket.emit('sendKey', keyItem[0].vapidKeys[0].publicKey)
-                // }
+                if (subs[0].subscription.length === 0) {
+                    socket.emit('sendKey', keyItem[0].vapidKeys[0].publicKey)
+                }
             })
 
 
@@ -343,12 +341,23 @@ app.get('/', auth, async (req, res) => {
                 })
             })
 
+            let fFind = []
+            const findFriend = await Users.find({username: req.cookies.user})
+            for (let i = 0; i < findFriend[0].friends.length; i++) {
+                if (findFriend[0].friends[i].success === true) {
+                    let friendData = {
+                        friend: findFriend[0].friends[i].friend
+                    }
 
-            const findAll = await Users.find({
-                username: req.cookies.user
-            })
+                    await Users.findOne({
+                        username: findFriend[0].friends[i].friend
+                    }).then(r => friendData.pic = r.pic)
 
-            socket.emit('searchData', findAll[0].friends)
+                    fFind.push(friendData)
+                }
+            }
+
+            socket.emit('searchData', fFind)
 
 
             let chats = []
@@ -498,7 +507,15 @@ app.get('/friends', friends, async (req, res) => {
             const find = await Users.find({username: req.cookies.user})
             for (let i = 0; i < find[0].friends.length; i++) {
                 if (find[0].friends[i].success === true) {
-                    fFind.push(find[0].friends[i])
+                    let friendData = {
+                        friend: find[0].friends[i].friend
+                    }
+
+                    await Users.findOne({
+                        username: find[0].friends[i].friend
+                    }).then(r => friendData.pic = r.pic)
+
+                    fFind.push(friendData)
                 }
             }
             socket.emit('searchData', fFind)
@@ -751,6 +768,15 @@ app.get('/user', async (req, res) => {
 
 })
 
+app.get('.well-known/assetlinks.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
+    res.sendFile(__dirname + '/public/assetlinks.json')
+})
+
+app.get('/test', (req, res) => {
+    res.render('auth')
+})
+
 app.post('/updatedata', async (req, res) => {
 
     let monthNumber = 0
@@ -957,7 +983,7 @@ app.get('/requests', reqAuth, async (req, res) => {
                 arrayFilters: [{
                     "el.friend": req.cookies.user
                 }]
-            })
+            }).then(r => socket.emit('done'))
 
 
         })
@@ -994,7 +1020,7 @@ app.get('/requests', reqAuth, async (req, res) => {
                         success: true
                     }
                 }
-            })
+            }).then(r => socket.emit('done'))
         })
     })
 })
@@ -1177,9 +1203,6 @@ app.get('/chats/:chat', async (req, res) => {
 
                 const send = await client.createNotification(notification)
                 console.log(send.body)
-
-                // sendNotification(notification)
-
             } catch (e) {
                 if (e instanceof OneSignal.HTTPError) {
                     console.log(e.statusCode)

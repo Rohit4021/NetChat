@@ -11,3 +11,7 @@ function decline(username) {
         window.location.reload()
     }, 1000)
 }
+
+socket.on('done', () => {
+    window.location.reload()
+})

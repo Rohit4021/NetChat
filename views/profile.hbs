@@ -73,24 +73,18 @@
             justify-content: space-between;
         }
 
-        .cropper-container {
-            max-width: 30%;
+        div.cropper-container {
+            max-width: 70%;
         }
 
         .cropper-canvas img {
-            display: none;
-        }
-
-
-        @media screen and (min-width: 700px) {
-            #cropOptions {
-                width: 25%;
-            }
+            visibility: hidden;
         }
 
         @media screen and (max-width: 700px) {
             #cropImage {
-                width: 100%;
+                width: 50%;
+                height: 30%;
             }
         }
     </style>

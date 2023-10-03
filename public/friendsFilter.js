@@ -13,9 +13,9 @@ socket.on('sendCookie', cookie => {
 
 function add(btn) {
     if (btn.childNodes[0].innerHTML === 'Requested') {
-        btn.childNodes[0].innerHTML = 'Add Friend'
+        btn.childNodes[0].innerHTML = 'Add'
         socket.emit('cancelRequest', btn.id)
-    } else if (btn.childNodes[0].innerHTML === 'Add Friend') {
+    } else if (btn.childNodes[0].innerHTML === 'Add') {
         socket.emit('addFriend', btn.id)
         btn.childNodes[0].innerHTML = 'Requested'
     }

@@ -33,8 +33,20 @@ textarea.addEventListener('keyup', (e) => {
 })
 
 function change(img) {
-    const image = img.files[0]
-    sendImage(image)
+    if (img.files.length > 0) {
+        const image = img.files[0]
+        const filesize = Math.round((image.size / 1024))
+
+        if (filesize >= (1024 * 10)) {
+            console.log('File should be less than 10mb.')
+            alert("File should be less than 10mb.")
+            img.value = ''
+        } else {
+            console.log('Valid.')
+            sendImage(image)
+            img.value = ''
+        }
+    }
 }
 
 function msgStatus() {
@@ -101,12 +113,10 @@ const sendImage = (image) => {
 
     socket.emit('message', msg)
 
-    let displayImage
     const reader = new FileReader()
-    reader.addEventListener("load", () => {
-        displayImage = reader.result
-        appendImage(displayImage, msg.msgId, 'outgoing')
-    })
+    reader.onload = () => {
+        appendImage(reader.result, msg.msgId, 'outgoing')
+    }
     reader.readAsDataURL(image)
 }
 
@@ -154,7 +164,6 @@ const appendMessage = (msg, type) => {
         <p>${msg.message}</p>
     `
     }
-
 
 
     mainDiv.innerHTML = markup

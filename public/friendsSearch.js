@@ -57,7 +57,12 @@ async function search(input) {
                 containerA.classList.add('username')
                 const h3 = document.createElement('h3')
                 h3.innerText = data[i].friend
+                const img = document.createElement('img')
+                img.src = data[i].pic
+                img.classList.add('profile')
+                img.setAttribute('onclick', `document.getElementById('${data[i].friend}').click()`)
                 containerA.appendChild(h3)
+                container.appendChild(img)
                 container.appendChild(containerA)
                 mainDiv.appendChild(container)
 
