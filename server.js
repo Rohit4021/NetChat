@@ -768,7 +768,7 @@ app.get('/user', async (req, res) => {
 
 })
 
-app.get('.well-known/assetlinks.json', (req, res) => {
+app.get('/.well-known/assetlinks.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     res.sendFile(__dirname + '/public/assetlinks.json')
 })
