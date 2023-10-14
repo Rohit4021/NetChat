@@ -12,19 +12,19 @@
     <div id="textColor">
         <h1 style="display:block;">Authorization Successful!</h1><br>
         <h2 style="font-weight: normal">Go to login:- </h2>
-        <a id="login" href="netchat://open.netchat/app"><input type="submit" value="Login"></a>
+        <a id="login"><input type="submit" value="Login"></a>
     </div>
 </div>
 <script>
 
-    // let a = document.getElementById('login')
-    //
-    // if (navigator.userAgent.match(/Android/i)) {
-    //     // a.href = 'intent://#Intent;action=android.intent.action.MAIN;package=com.netchat;end'
-    //     a.href = 'netchat://open.netchat'
-    // } else {
-    //     a.href = '/login'
-    // }
+    let a = document.getElementById('login')
+
+    if (navigator.userAgent.match(/Android/i)) {
+        // a.href = 'intent://#Intent;action=android.intent.action.MAIN;package=com.netchat;end'
+        a.href = '/app'
+    } else {
+        a.href = '/login'
+    }
 
     document.onselectstart = () => {
         event.preventDefault()
