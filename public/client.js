@@ -83,7 +83,7 @@ function appendToday() {
     if (dateConstructor.getMonth().toString().length === 1 && dateConstructor.getMonth() + 1 > 10) {
         month = '0' + (dateConstructor.getMonth() + 1)
     } else {
-        month = dateConstructor.getMonth().toString()
+        month = dateConstructor.getMonth() + 1
     }
 
     const fullDate = date + month + year
