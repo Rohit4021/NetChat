@@ -286,13 +286,16 @@ socket.on('chatHistory', (data) => {
                         date = dateConstructor.getDate().toString()
                     }
 
-                    if (dateConstructor.getMonth().toString().length === 1) {
+                    if (dateConstructor.getMonth().toString().length === 1 && dateConstructor.getMonth() + 1 > 10) {
                         monthTD = '0' + (dateConstructor.getMonth() + 1)
                     } else {
                         monthTD = dateConstructor.getMonth() + 1
                     }
 
                     const fullDate = date + monthTD.toString() + yearTD
+
+                    console.log(`fl ==> ${fl}`)
+                    console.log(`fullDate ==> ${fullDate}`)
 
                     let p
 
@@ -510,7 +513,7 @@ function copy() {
 
 function deleteChat() {
     socket.emit('deleteChat', name)
-    window.location.href = '/'
+    window.location.href = window.location.href
     document.getElementsByClassName('confirm')[0].style.display = 'none'
 }
 

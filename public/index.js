@@ -36,7 +36,12 @@ if ('serviceWorker' in navigator) {
                             userVisibleOnly: true,
                             applicationServerKey: key
                         }).then((push) => {
-                            console.log(push.toJSON())
+                            let things = {
+                                push,
+                                deviceId: uuid
+                            }
+
+                            socket.emit('sendToDatabase', things)
                         })
                     })
                 }

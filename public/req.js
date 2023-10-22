@@ -15,3 +15,7 @@ function decline(username) {
 socket.on('done', () => {
     window.location.reload()
 })
+
+document.onselectstart = () => {
+    event.preventDefault()
+}

@@ -269,6 +269,10 @@
             window.location.reload()
         }
     }
+
+    document.onselectstart = () => {
+        event.preventDefault()
+    }
 </script>
 </body>
 </html>

@@ -642,7 +642,7 @@ app.post('/register', async (req, res) => {
                         to: email,
                         subject: 'Activation Mail',
                         text: 'Thank you for registering to our website. To activate your account, please open this link :- ' +
-                            `https://netchat-nz-production.up.railway.app/user?email=${email}`
+                            `https://netchat-nu-production.up.railway.app/user?email=${email}`
                     }
 
                     transporter.sendMail(mailOptions, function (error, info) {
