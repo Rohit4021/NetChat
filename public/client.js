@@ -80,7 +80,7 @@ function appendToday() {
         date = dateConstructor.getDate().toString()
     }
 
-    if (dateConstructor.getMonth().toString().length === 1) {
+    if (dateConstructor.getMonth().toString().length === 1 && dateConstructor.getMonth() + 1 > 10) {
         month = '0' + (dateConstructor.getMonth() + 1)
     } else {
         month = dateConstructor.getMonth().toString()
@@ -133,6 +133,8 @@ const sendMessage = (message) => {
     }
 
     socket.emit('message', msg)
+
+
 
     appendToday()
 
