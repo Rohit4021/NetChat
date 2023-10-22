@@ -268,12 +268,10 @@ socket.on('chatHistory', (data) => {
                 if (search.length === 0) {
                     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
-                    const nMonth = month.split('0')
-
                     const da = document.createElement('p')
                     da.setAttribute('id', 'day')
 
-                    da.innerText = `${day} ${months[nMonth[1] - 1]}, ${year}`
+                    da.innerText = `${day} ${months[month - 1]}, ${year}`
                     da.classList.add(day + month + year)
                     messageArea.appendChild(da)
 
