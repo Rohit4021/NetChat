@@ -136,8 +136,8 @@ async function deleteChats() {
     }).then(r => console.log(r))
 }
 
-deleteChats()
-deleteUsers()
+// deleteChats()
+// deleteUsers()
 
 module.exports = {
     Chats,
