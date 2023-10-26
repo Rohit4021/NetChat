@@ -839,10 +839,6 @@ app.get('/edit.css', (req, res) => {
     res.sendFile(__dirname + '/public/edit.css')
 })
 
-app.get('/manifest.json', (req, res) => {
-    res.sendFile(__dirname + '/public/manifest.json')
-})
-
 app.get('/style_profile.css', (req, res) => {
     res.sendFile(__dirname + '/public/style_profile.css')
 })
