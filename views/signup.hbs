@@ -17,7 +17,7 @@
         <label for="name" class="form__label">Full Name</label>
     </div>
     <div class="form__group field">
-        <input type="email" class="form__field" placeholder="Email" name="email" id="email" required/>
+        <input type="email" class="form__field" placeholder="Email" name="email" id="email" onkeypress="return event.charCode !== 32" required/>
         <label for="email" class="form__label">Email</label>
     </div>
     <div class="form__group field">
@@ -182,7 +182,7 @@
         </select>
     </div>
     <div class="form__group field">
-        <input type="text" class="form__field" placeholder="Username" name="username" id="username" required/>
+        <input type="text" class="form__field" placeholder="Username" name="username" id="username" onkeypress="return event.charCode !== 32" required/>
         <label for="username" class="form__label">Username</label>
     </div>
     <div class="form__group field" style="display: inline-flex;">

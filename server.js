@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser')
 const nodemailer = require('nodemailer')
 const fs = require('fs')
 const validator = require('validator')
-const io = require('socket.io')(server, { maxHttpBufferSize: 1e7 })
+const io = require('socket.io')(server, {maxHttpBufferSize: 1e7})
 const path = require("path");
 const short = require('short-uuid')
 const bcrypt = require('bcrypt')
@@ -26,6 +26,7 @@ const OneSignal = require('onesignal-node')
 const https = require('https')
 const cors = require('cors')
 const schedule = require('node-schedule')
+const os = require("os");
 require('dotenv').config()
 
 const PORT = process.env.PORT || 8000
@@ -129,16 +130,16 @@ const removeRequestFun = async (user, friend) => {
                     user: user
                 }
             }
-        })
-
-        await Users.updateOne({
-            username: user
-        }, {
-            $pull: {
-                friends: {
-                    user: friend
+        }).then(async () => {
+            await Users.updateOne({
+                username: user
+            }, {
+                $pull: {
+                    friends: {
+                        friend: friend
+                    }
                 }
-            }
+            })
         })
     } catch (e) {
         console.log(e)
@@ -166,6 +167,79 @@ const addRequestFun = async (user, friend) => {
                 }
             }
         })
+
+        const icon = await Users.find({
+            username: friend
+        })
+
+
+        let publicKey
+        let privateKey
+
+        for (let i = 0; i < icon[0].vapidKeys.length; i++) {
+            const keys = icon[0].vapidKeys[i]
+            publicKey = keys.publicKey
+            privateKey = keys.privateKey
+
+            push.setVapidDetails(
+                'mailto:test@code.co.uk',
+                publicKey,
+                privateKey
+            )
+
+            const pic = await Users.find({
+                username: user
+            })
+
+
+            const payload = {
+                title: user,
+                icon: pic[0].pic,
+                this: user,
+                msg: `${user} wants to be your friend.`,
+                type: 'pushsubscription'
+            }
+
+            for (let x = 0; x < icon[0].subscription.length; x++) {
+
+                if (keys.deviceId === icon[0].subscription[x].deviceId) {
+                    let pushSubscription = {
+                        endpoint: icon[0].subscription[0].endpoint,
+                        expirationTime: null,
+                        keys: {
+                            p256dh: icon[0].subscription[0].p256dh,
+                            auth: icon[0].subscription[0].auth
+                        }
+                    }
+
+                    push.sendNotification(pushSubscription, JSON.stringify(payload))
+                }
+            }
+        }
+        const notification = {
+            contents: {},
+            android_sound: 'dattebayo',
+            android_visibility: 1,
+            headings: {
+                en: user
+            },
+            priority: 10,
+            filters: [
+                {
+                    field: 'tag',
+                    key: 'email',
+                    relation: '=',
+                    value: friend
+                }
+            ]
+        }
+
+        notification.contents.en = `${user} wants to be your friend.`
+
+        console.log(notification)
+
+        const send = await client.createNotification(notification)
+        console.log(send.body)
 
     } catch (e) {
         console.log(e)
