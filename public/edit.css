@@ -1,3 +1,7 @@
+html {
+    -webkit-tap-highlight-color: transparent;
+}
+
 form {
     font-family: "Poppins", sans-serif;
     display: flex;
