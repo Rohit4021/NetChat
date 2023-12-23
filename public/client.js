@@ -577,6 +577,16 @@ function attachExitPreview(div) {
     }, 1000)
 }
 
+function imageUpload() {
+    try {
+        if (Android) {
+            Android.imgSelect()
+        }
+    } catch (e) {
+
+    }
+}
+
 function openCamera() {
     try {
         if (Android) {
