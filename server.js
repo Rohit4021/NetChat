@@ -1472,8 +1472,12 @@ app.get('/chats/:chat', async (req, res) => {
 
         socket.on('cancelNot', async () => {
             console.log(notID)
-            const cancelNot = await client.cancelNotification(notID)
-            console.log(cancelNot)
+            try {
+                const cancelNot = await client.cancelNotification(notID)
+                console.log(cancelNot)
+            } catch (e) {
+                console.log(e)
+            }
         })
 
         socket.on('readDone', async msg => {
