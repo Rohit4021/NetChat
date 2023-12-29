@@ -53,7 +53,7 @@ app.use(express.urlencoded({
 }))
 app.use(express.json())
 
-server.listen(PORT, () => {
+server.listen(PORT, async () => {
     console.log(`Listening at port : ${PORT}`)
 })
 
@@ -1275,7 +1275,7 @@ app.get('/chats/:chat', async (req, res) => {
 
                 const send = await client.createNotification(notification)
                 console.log(send.body)
-                notID = null
+                notID = send.body.id
             } catch (e) {
                 if (e instanceof OneSignal.HTTPError) {
                     console.log(e.statusCode)
