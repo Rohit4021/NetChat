@@ -1215,6 +1215,8 @@ app.get('/chats/:chat', async (req, res) => {
             }
         }
 
+        let notID
+
         socket.on('message', async (msg) => {
             const proPic = await Users.find({
                 username: msg.user
@@ -1273,6 +1275,7 @@ app.get('/chats/:chat', async (req, res) => {
 
                 const send = await client.createNotification(notification)
                 console.log(send.body)
+                notID = null
             } catch (e) {
                 if (e instanceof OneSignal.HTTPError) {
                     console.log(e.statusCode)
@@ -1465,6 +1468,11 @@ app.get('/chats/:chat', async (req, res) => {
                     }
                 })
             }
+        })
+
+        socket.on('cancelNot', async () => {
+            const cancelNot = await client.cancelNotification(notID)
+            console.log(cancelNot)
         })
 
         socket.on('readDone', async msg => {

@@ -420,6 +420,7 @@ socket.on('readDoneAgain', msg => {
     setTimeout(() => {
         if (msg.user === name || msg === 'msg') {
             document.getElementsByClassName('seen')[0].innerText = 'Seen'
+            socket.emit('cancelNot')
         }
     }, 500)
 })
