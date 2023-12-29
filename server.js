@@ -1471,6 +1471,7 @@ app.get('/chats/:chat', async (req, res) => {
         })
 
         socket.on('cancelNot', async () => {
+            console.log(notID)
             const cancelNot = await client.cancelNotification(notID)
             console.log(cancelNot)
         })
