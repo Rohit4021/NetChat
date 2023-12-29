@@ -1276,6 +1276,9 @@ app.get('/chats/:chat', async (req, res) => {
                 const send = await client.createNotification(notification)
                 console.log(send.body)
                 notID = send.body.id
+
+                const clients = io.sockets.clients()
+                console.log(clients)
             } catch (e) {
                 if (e instanceof OneSignal.HTTPError) {
                     console.log(e.statusCode)
